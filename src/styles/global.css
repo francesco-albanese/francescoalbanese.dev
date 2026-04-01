@@ -1,3 +1,24 @@
 @import "tailwindcss";
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/600.css";
+@import "./tokens.css";
+
+@theme {
+  --color-base: var(--bg-base);
+  --color-surface: var(--bg-surface);
+  --color-overlay: var(--bg-overlay);
+  --color-statusbar: var(--bg-statusbar);
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-coral: var(--accent-coral);
+  --color-purple: var(--accent-purple);
+  --color-blue: var(--accent-blue);
+  --color-teal: var(--accent-teal);
+  --color-yellow: var(--accent-yellow);
+  --color-cyan: var(--accent-cyan);
+  --color-red: var(--accent-red);
+  --color-cursor: var(--cursor-color);
+  --font-mono: var(--font-mono);
+}

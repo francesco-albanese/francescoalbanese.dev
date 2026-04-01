@@ -1,3 +1,8 @@
 export function Hello() {
-	return <p className="bg-red-500 text-white p-4">React + Tailwind working</p>;
+	return (
+		<div className="bg-base text-primary font-mono p-4">
+			<p className="text-coral">Coral accent</p>
+			<p className="text-secondary">Secondary text</p>
+		</div>
+	);
 }
