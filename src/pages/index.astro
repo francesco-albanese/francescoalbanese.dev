@@ -1,16 +1,8 @@
 ---
-import "@/styles/global.css";
-import { Hello } from "@/components/Hello";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Terminal } from "@/components/Terminal/Terminal";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Francesco Albanese</title>
-  </head>
-  <body>
-    <h1>francescoalbanese.dev</h1>
-    <Hello client:load />
-  </body>
-</html>
+<BaseLayout title="Francesco Albanese">
+  <Terminal client:load />
+</BaseLayout>
