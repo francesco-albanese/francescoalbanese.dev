@@ -1,0 +1,19 @@
+:root {
+  --bg-base: #1a1b26;
+  --bg-surface: #1f2335;
+  --bg-overlay: #24283b;
+  --bg-statusbar: #0f1019;
+  --text-primary: #c0caf5;
+  --text-secondary: #a9b1d6;
+  --text-muted: #4a5078;
+  --text-faint: #2f3549;
+  --accent-coral: #ff9e64;
+  --accent-purple: #bb9af7;
+  --accent-blue: #7aa2f7;
+  --accent-teal: #73c8a9;
+  --accent-yellow: #e0af68;
+  --accent-cyan: #7dcfff;
+  --accent-red: #f7768e;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+  --cursor-color: #ff9e64;
+}

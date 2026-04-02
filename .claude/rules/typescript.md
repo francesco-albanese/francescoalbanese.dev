@@ -1,0 +1,1 @@
+- Don't add comments to the code unless something is not obvious. If you have to add comments explain the why, never the what. The code should be self-explanatory.
