@@ -7,6 +7,7 @@ import { SkillsOutput } from "./SkillsOutput";
 import { LinksOutput } from "./LinksOutput";
 import { ProjectsOutput } from "./ProjectsOutput";
 import { ExperienceOutput } from "./ExperienceOutput";
+import { SudoOutput, LsOutput, CatOutput } from "./EasterEggs";
 
 type CommandContext = {
 	onExecuteCommand: (command: string) => void;
@@ -53,5 +54,15 @@ export function dispatch(
 		return { type: "output", node: <ErrorOutput input={input} /> };
 	}
 
+	const egg = matchEasterEgg(input);
+	if (egg) return { type: "output", node: egg };
+
 	return { type: "output", node: <ErrorOutput input={input} /> };
+}
+
+function matchEasterEgg(input: string): ReactNode | null {
+	if (input.startsWith("sudo")) return <SudoOutput />;
+	if (input === "ls" || input === "/ls") return <LsOutput />;
+	if (input === "cat") return <CatOutput />;
+	return null;
 }
