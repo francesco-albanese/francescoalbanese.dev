@@ -1,16 +1,37 @@
 import { useState, useRef } from "react";
+import { commands } from "@/content/data";
 
 type TerminalInputProps = {
 	onSubmit: (value: string) => void;
+	onShowCompletions: (matches: string[]) => void;
 	history: string[];
 };
 
-export function TerminalInput({ onSubmit, history }: TerminalInputProps) {
+const commandNames = Object.keys(commands);
+
+export function TerminalInput({
+	onSubmit,
+	onShowCompletions,
+	history,
+}: TerminalInputProps) {
 	const [value, setValue] = useState("");
 	const [historyIndex, setHistoryIndex] = useState(-1);
 	const draftRef = useRef("");
 
 	function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+		if (e.key === "Tab") {
+			e.preventDefault();
+			const input = value.trim();
+			if (!input) return;
+			const matches = commandNames.filter((cmd) => cmd.startsWith(input));
+			if (matches.length === 1 && matches[0]) {
+				setValue(matches[0]);
+			} else if (matches.length > 1) {
+				onShowCompletions(matches);
+			}
+			return;
+		}
+
 		if (e.key === "Enter") {
 			e.preventDefault();
 			onSubmit(value);

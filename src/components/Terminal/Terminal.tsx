@@ -65,7 +65,25 @@ export function Terminal() {
 					</div>
 				))}
 			</main>
-			<TerminalInput onSubmit={executeCommand} history={history} />
+			<TerminalInput
+				onSubmit={executeCommand}
+				onShowCompletions={(matches) => {
+					setEntries((prev) => [
+						...prev,
+						{
+							id: nextId++,
+							prompt: "",
+							node: <p className="text-muted">{matches.join("  ")}</p>,
+						},
+					]);
+					requestAnimationFrame(() => {
+						mainRef.current?.scrollTo({
+							top: mainRef.current?.scrollHeight,
+						});
+					});
+				}}
+				history={history}
+			/>
 			<StatusBar />
 		</div>
 	);
