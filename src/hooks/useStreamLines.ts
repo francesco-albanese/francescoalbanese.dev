@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useReducedMotion } from "./useReducedMotion";
 
 export function useStreamLines<T>(
-	items: T[],
+	items: readonly T[],
 	delayMs = 45,
 	startDelay = 0,
-): { visibleItems: T[]; done: boolean } {
+): { visibleItems: readonly T[]; done: boolean } {
 	const reduced = useReducedMotion();
 	const [count, setCount] = useState(0);
 	const [started, setStarted] = useState(startDelay === 0);

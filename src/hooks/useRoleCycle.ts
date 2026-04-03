@@ -4,7 +4,7 @@ import { useReducedMotion } from "./useReducedMotion";
 type Phase = "typing" | "pausing" | "erasing";
 
 export function useRoleCycle(
-	roles: string[],
+	roles: readonly string[],
 	pauseMs = 2800,
 	speed = 65,
 ): { displayed: string; done: boolean } {
@@ -25,6 +25,7 @@ export function useRoleCycle(
 		if (reduced || roles.length === 0) return;
 
 		const currentRole = roles[roleIndex];
+		if (!currentRole) return;
 
 		if (phase === "typing") {
 			if (charIndex < currentRole.length) {
@@ -55,7 +56,7 @@ export function useRoleCycle(
 	}
 
 	return {
-		displayed: roles[roleIndex].slice(0, charIndex),
+		displayed: (roles[roleIndex] ?? "").slice(0, charIndex),
 		done: phase === "pausing",
 	};
 }
