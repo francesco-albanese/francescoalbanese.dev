@@ -11,12 +11,11 @@ type OutputEntry = {
 	node: ReactNode;
 };
 
-let nextId = 0;
-
 export function Terminal() {
 	const [entries, setEntries] = useState<OutputEntry[]>([]);
 	const [history, setHistory] = useState<string[]>([]);
 	const mainRef = useRef<HTMLElement>(null);
+	const nextIdRef = useRef(0);
 
 	const executeCommand = useCallback((input: string) => {
 		const trimmed = input.trim();
@@ -35,7 +34,7 @@ export function Terminal() {
 
 		setEntries((prev) => [
 			...prev,
-			{ id: nextId++, prompt: trimmed, node: result.node },
+			{ id: nextIdRef.current++, prompt: trimmed, node: result.node },
 		]);
 
 		requestAnimationFrame(() => {
@@ -49,6 +48,8 @@ export function Terminal() {
 			<main
 				ref={mainRef}
 				className="flex-1 overflow-y-auto px-4 py-2 font-mono text-sm"
+				aria-live="polite"
+				role="log"
 			>
 				{entries.map((entry) => (
 					<div key={entry.id} className="mb-3">
@@ -71,7 +72,7 @@ export function Terminal() {
 					setEntries((prev) => [
 						...prev,
 						{
-							id: nextId++,
+							id: nextIdRef.current++,
 							prompt: "",
 							node: <p className="text-muted">{matches.join("  ")}</p>,
 						},

@@ -85,6 +85,7 @@ export function TerminalInput({
 				aria-label="Terminal input"
 				className="flex-1 bg-transparent text-primary outline-none placeholder:text-faint"
 				autoComplete="off"
+				autoFocus
 				spellCheck={false}
 			/>
 		</div>

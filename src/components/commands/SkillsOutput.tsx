@@ -1,20 +1,26 @@
 import { skills } from "@/content/data";
 
-const tagClasses: Record<string, string> = {
+const tagClasses: Record<"purple" | "blue" | "teal" | "yellow", string> = {
 	purple: "bg-purple/20 text-purple",
 	blue: "bg-blue/20 text-blue",
 	teal: "bg-teal/20 text-teal",
 	yellow: "bg-yellow/20 text-yellow",
 };
 
-const labelClasses: Record<string, string> = {
+const labelClasses: Record<"purple" | "blue" | "teal" | "yellow", string> = {
 	purple: "text-purple",
 	blue: "text-blue",
 	teal: "text-teal",
 	yellow: "text-yellow",
 };
 
-function Tag({ label, color }: { label: string; color: string }) {
+function Tag({
+	label,
+	color,
+}: {
+	label: string;
+	color: "purple" | "blue" | "teal" | "yellow";
+}) {
 	return (
 		<span
 			className={`inline-block rounded-full px-2 py-0.5 text-xs ${tagClasses[color]}`}

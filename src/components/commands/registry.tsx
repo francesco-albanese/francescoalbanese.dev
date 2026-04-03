@@ -63,6 +63,6 @@ export function dispatch(
 function matchEasterEgg(input: string): ReactNode | null {
 	if (input.startsWith("sudo")) return <SudoOutput />;
 	if (input === "ls" || input === "/ls") return <LsOutput />;
-	if (input === "cat") return <CatOutput />;
+	if (input === "cat" || input === "/cat") return <CatOutput />;
 	return null;
 }
