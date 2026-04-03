@@ -54,7 +54,6 @@ export function Terminal() {
 					ref={containerRef}
 					onScroll={handleScroll}
 					className="h-full overflow-y-auto px-4 py-2 font-mono text-sm"
-					aria-live="polite"
 					role="log"
 				>
 					{welcomeVisible && (

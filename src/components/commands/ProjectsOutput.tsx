@@ -29,7 +29,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 }
 
 export function ProjectsOutput() {
-	const { visibleItems: visibleProjects } = useStreamLines([...projects]);
+	const { visibleItems: visibleProjects } = useStreamLines(projects);
 
 	return (
 		<div className="space-y-3">

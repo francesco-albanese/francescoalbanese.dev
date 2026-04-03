@@ -32,7 +32,7 @@ function Tag({
 }
 
 export function SkillsOutput() {
-	const { visibleItems: visibleGroups } = useStreamLines([...skills]);
+	const { visibleItems: visibleGroups } = useStreamLines(skills);
 
 	return (
 		<div className="space-y-3">

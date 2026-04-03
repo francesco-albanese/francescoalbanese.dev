@@ -30,7 +30,7 @@ export function useRoleCycle(
 			if (charIndex < currentRole.length) {
 				timerRef.current = setTimeout(() => setCharIndex((c) => c + 1), speed);
 			} else {
-				timerRef.current = setTimeout(() => setPhase("pausing"), 0);
+				setPhase("pausing");
 			}
 		} else if (phase === "pausing") {
 			timerRef.current = setTimeout(() => setPhase("erasing"), pauseMs);

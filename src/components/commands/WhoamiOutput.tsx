@@ -6,7 +6,7 @@ const roles = experience.map((e) => e.role);
 
 export function WhoamiOutput() {
 	const { displayed: roleText } = useRoleCycle(roles);
-	const { visibleItems: visibleLines } = useStreamLines([...identity.bio]);
+	const { visibleItems: visibleLines } = useStreamLines(identity.bio);
 
 	return (
 		<div className="space-y-2">

@@ -2,7 +2,7 @@ import { experience } from "@/content/data";
 import { useStreamLines } from "@/hooks/useStreamLines";
 
 export function ExperienceOutput() {
-	const { visibleItems: visibleEntries } = useStreamLines([...experience]);
+	const { visibleItems: visibleEntries } = useStreamLines(experience);
 
 	return (
 		<div className="relative ml-3">

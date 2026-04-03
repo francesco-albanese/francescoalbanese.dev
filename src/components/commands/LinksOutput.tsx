@@ -2,7 +2,7 @@ import { links } from "@/content/data";
 import { useStreamLines } from "@/hooks/useStreamLines";
 
 export function LinksOutput() {
-	const { visibleItems: visibleLinks } = useStreamLines([...links]);
+	const { visibleItems: visibleLinks } = useStreamLines(links);
 
 	return (
 		<div className="space-y-1.5">

@@ -5,7 +5,7 @@ type GreetingPhase = "idle" | "welcome" | "typing" | "executing" | "done";
 
 const WELCOME_DELAY = 300;
 const TYPING_PAUSE = 500;
-const CHAR_SPEED = 80;
+const CHAR_SPEED = 65;
 const COMMAND = "/whoami";
 
 export function useGreeting(executeCommand: (cmd: string) => void) {
@@ -13,47 +13,70 @@ export function useGreeting(executeCommand: (cmd: string) => void) {
 	const [phase, setPhase] = useState<GreetingPhase>("idle");
 	const [typedText, setTypedText] = useState("");
 	const [welcomeVisible, setWelcomeVisible] = useState(false);
-	const hasRun = useRef(false);
+
+	const timersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+	const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 	useEffect(() => {
-		if (hasRun.current) return;
-		hasRun.current = true;
+		const track = (id: ReturnType<typeof setTimeout>) => {
+			timersRef.current.add(id);
+			return id;
+		};
+
+		const clearAllTimers = () => {
+			for (const id of timersRef.current) {
+				clearTimeout(id);
+			}
+			timersRef.current.clear();
+			if (intervalRef.current !== null) {
+				clearInterval(intervalRef.current);
+				intervalRef.current = null;
+			}
+		};
 
 		if (reduced) {
 			setWelcomeVisible(true);
 			executeCommand(COMMAND);
 			setPhase("done");
-			return;
+			return clearAllTimers;
 		}
 
 		setPhase("welcome");
-		const welcomeTimer = setTimeout(() => {
-			setWelcomeVisible(true);
 
-			const typingTimer = setTimeout(() => {
-				setPhase("typing");
-				let charIndex = 0;
+		track(
+			setTimeout(() => {
+				setWelcomeVisible(true);
 
-				const interval = setInterval(() => {
-					charIndex++;
-					setTypedText(COMMAND.slice(0, charIndex));
+				track(
+					setTimeout(() => {
+						setPhase("typing");
+						let charIndex = 0;
 
-					if (charIndex >= COMMAND.length) {
-						clearInterval(interval);
-						setTimeout(() => {
-							setPhase("executing");
-							setTypedText("");
-							executeCommand(COMMAND);
-							setPhase("done");
-						}, 150);
-					}
-				}, CHAR_SPEED);
-			}, TYPING_PAUSE);
+						intervalRef.current = setInterval(() => {
+							charIndex++;
+							setTypedText(COMMAND.slice(0, charIndex));
 
-			return () => clearTimeout(typingTimer);
-		}, WELCOME_DELAY);
+							if (charIndex >= COMMAND.length) {
+								if (intervalRef.current !== null) {
+									clearInterval(intervalRef.current);
+									intervalRef.current = null;
+								}
+								track(
+									setTimeout(() => {
+										setPhase("executing");
+										setTypedText("");
+										executeCommand(COMMAND);
+										setPhase("done");
+									}, 150),
+								);
+							}
+						}, CHAR_SPEED);
+					}, TYPING_PAUSE),
+				);
+			}, WELCOME_DELAY),
+		);
 
-		return () => clearTimeout(welcomeTimer);
+		return clearAllTimers;
 	}, [reduced, executeCommand]);
 
 	const isAutoTyping = phase === "typing";
