@@ -5,6 +5,8 @@ type TerminalInputProps = {
 	onSubmit: (value: string) => void;
 	onShowCompletions: (matches: string[]) => void;
 	history: string[];
+	autoTypedText?: string;
+	disabled?: boolean;
 };
 
 const commandNames = Object.keys(commands);
@@ -13,10 +15,14 @@ export function TerminalInput({
 	onSubmit,
 	onShowCompletions,
 	history,
+	autoTypedText = "",
+	disabled = false,
 }: TerminalInputProps) {
 	const [value, setValue] = useState("");
 	const [historyIndex, setHistoryIndex] = useState(-1);
 	const draftRef = useRef("");
+
+	const displayValue = autoTypedText || value;
 
 	function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
 		if (e.key === "Tab") {
@@ -73,21 +79,33 @@ export function TerminalInput({
 			<span className="text-coral text-lg" aria-hidden="true">
 				›
 			</span>
-			<input
-				type="text"
-				value={value}
-				onChange={(e) => {
-					setValue(e.target.value);
-					setHistoryIndex(-1);
-				}}
-				onKeyDown={handleKeyDown}
-				placeholder="type /help for commands"
-				aria-label="Terminal input"
-				className="flex-1 bg-transparent text-primary outline-none placeholder:text-faint"
-				autoComplete="off"
-				autoFocus
-				spellCheck={false}
-			/>
+			<div className="relative flex-1">
+				<input
+					type="text"
+					value={displayValue}
+					onChange={(e) => {
+						if (disabled) return;
+						setValue(e.target.value);
+						setHistoryIndex(-1);
+					}}
+					onKeyDown={disabled ? undefined : handleKeyDown}
+					placeholder={disabled ? "" : "type /help for commands"}
+					aria-label="Terminal input"
+					className="w-full bg-transparent text-primary outline-none placeholder:text-faint focus-visible:ring-1 focus-visible:ring-coral"
+					autoComplete="off"
+					autoFocus
+					spellCheck={false}
+					readOnly={disabled}
+				/>
+				{!displayValue && (
+					<span
+						className="animate-blink pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-coral"
+						aria-hidden="true"
+					>
+						▊
+					</span>
+				)}
+			</div>
 		</div>
 	);
 }

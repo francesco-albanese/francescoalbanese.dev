@@ -1,4 +1,5 @@
 import { skills } from "@/content/data";
+import { useStreamLines } from "@/hooks/useStreamLines";
 
 const tagClasses: Record<"purple" | "blue" | "teal" | "yellow", string> = {
 	purple: "bg-purple/20 text-purple",
@@ -31,9 +32,11 @@ function Tag({
 }
 
 export function SkillsOutput() {
+	const { visibleItems: visibleGroups } = useStreamLines([...skills]);
+
 	return (
 		<div className="space-y-3">
-			{skills.map((group) => (
+			{visibleGroups.map((group) => (
 				<div key={group.label} className="space-y-1">
 					<p className={`${labelClasses[group.color]} font-semibold`}>
 						{group.label}

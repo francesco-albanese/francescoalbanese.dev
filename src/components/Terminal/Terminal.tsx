@@ -3,7 +3,10 @@ import type { ReactNode } from "react";
 import { HeaderBar } from "./HeaderBar";
 import { TerminalInput } from "./TerminalInput";
 import { StatusBar } from "./StatusBar";
+import { ScrollIndicator } from "./ScrollIndicator";
 import { dispatch } from "@/components/commands/registry";
+import { useGreeting } from "@/hooks/useGreeting";
+import { useAutoScroll } from "@/hooks/useAutoScroll";
 
 type OutputEntry = {
 	id: number;
@@ -14,7 +17,6 @@ type OutputEntry = {
 export function Terminal() {
 	const [entries, setEntries] = useState<OutputEntry[]>([]);
 	const [history, setHistory] = useState<string[]>([]);
-	const mainRef = useRef<HTMLElement>(null);
 	const nextIdRef = useRef(0);
 
 	const executeCommand = useCallback((input: string) => {
@@ -36,36 +38,45 @@ export function Terminal() {
 			...prev,
 			{ id: nextIdRef.current++, prompt: trimmed, node: result.node },
 		]);
-
-		requestAnimationFrame(() => {
-			mainRef.current?.scrollTo({ top: mainRef.current.scrollHeight });
-		});
 	}, []);
+
+	const { welcomeVisible, typedText, isAutoTyping, inputDisabled } =
+		useGreeting(executeCommand);
+
+	const { containerRef, showIndicator, handleScroll, scrollToBottom } =
+		useAutoScroll([entries.length, welcomeVisible]);
 
 	return (
 		<div className="flex flex-col h-[100dvh] bg-base">
 			<HeaderBar />
-			<main
-				ref={mainRef}
-				className="flex-1 overflow-y-auto px-4 py-2 font-mono text-sm"
-				aria-live="polite"
-				role="log"
-			>
-				{entries.map((entry) => (
-					<div key={entry.id} className="mb-3">
-						<div className="text-muted">
-							<span className="text-secondary">
-								visitor@francescoalbanese.dev
-							</span>
-							<span className="text-muted">:</span>
-							<span className="text-blue">~</span>
-							<span className="text-muted">$ </span>
-							<span className="text-primary">{entry.prompt}</span>
+			<div className="relative flex-1 overflow-hidden">
+				<main
+					ref={containerRef}
+					onScroll={handleScroll}
+					className="h-full overflow-y-auto px-4 py-2 font-mono text-sm"
+					aria-live="polite"
+					role="log"
+				>
+					{welcomeVisible && (
+						<p className="mb-3 text-muted">Welcome to francescoalbanese.dev</p>
+					)}
+					{entries.map((entry) => (
+						<div key={entry.id} className="mb-3">
+							<div className="text-muted">
+								<span className="text-secondary">
+									visitor@francescoalbanese.dev
+								</span>
+								<span className="text-muted">:</span>
+								<span className="text-blue">~</span>
+								<span className="text-muted">$ </span>
+								<span className="text-primary">{entry.prompt}</span>
+							</div>
+							<div className="mt-1 ml-1">{entry.node}</div>
 						</div>
-						<div className="mt-1 ml-1">{entry.node}</div>
-					</div>
-				))}
-			</main>
+					))}
+				</main>
+				{showIndicator && <ScrollIndicator onClick={scrollToBottom} />}
+			</div>
 			<TerminalInput
 				onSubmit={executeCommand}
 				onShowCompletions={(matches) => {
@@ -77,13 +88,10 @@ export function Terminal() {
 							node: <p className="text-muted">{matches.join("  ")}</p>,
 						},
 					]);
-					requestAnimationFrame(() => {
-						mainRef.current?.scrollTo({
-							top: mainRef.current?.scrollHeight,
-						});
-					});
 				}}
 				history={history}
+				autoTypedText={isAutoTyping ? typedText : ""}
+				disabled={inputDisabled}
 			/>
 			<StatusBar />
 		</div>
