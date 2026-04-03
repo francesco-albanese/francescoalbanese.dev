@@ -1,11 +1,42 @@
 ---
 import "@/styles/global.css";
+import { SEO } from "astro-seo";
 
 type Props = {
   title: string;
 };
 
 const { title } = Astro.props;
+
+const siteUrl = "https://www.francescoalbanese.dev";
+const description =
+  "Lead AI Engineer & Senior Staff Engineer based in London. Specialising in GenAI, LLMs, RAG, agentic workflows, and full-stack distributed systems.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Francesco Albanese",
+  jobTitle: "Lead AI Engineer",
+  url: siteUrl,
+  sameAs: [
+    "https://github.com/francesco-albanese",
+    "https://www.linkedin.com/in/francescoalbanese",
+  ],
+  knowsAbout: [
+    "LLMs",
+    "RAG",
+    "Agentic Workflows",
+    "TypeScript",
+    "Python",
+    "AWS",
+    "Terraform",
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "London",
+    addressCountry: "GB",
+  },
+};
 ---
 
 <!doctype html>
@@ -14,7 +45,37 @@ const { title } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
+    <meta name="theme-color" content="#1a1b26" />
+    <SEO
+      title={title}
+      description={description}
+      canonical={siteUrl}
+      openGraph={{
+        basic: {
+          title: "Francesco Albanese — Lead AI Engineer",
+          type: "website",
+          image: `${siteUrl}/og.png`,
+          url: siteUrl,
+        },
+        optional: {
+          description,
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title: "Francesco Albanese — Lead AI Engineer",
+        description,
+        image: `${siteUrl}/og.png`,
+      }}
+      extend={{
+        meta: [
+          { name: "keywords", content: "AI Engineer, Lead AI Engineer, LLMs, RAG, Agentic Workflows, GenAI, TypeScript, Python, AWS, Terraform, London" },
+          { name: "author", content: "Francesco Albanese" },
+          { name: "robots", content: "index, follow" },
+        ],
+      }}
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body class="bg-base text-primary font-mono">
     <slot />
