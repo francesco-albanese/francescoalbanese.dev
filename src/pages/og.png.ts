@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import type { ReactNode } from "react";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import satori from "satori";
@@ -295,7 +296,7 @@ export const GET: APIRoute = async () => {
 		loadFont("700"),
 	]);
 
-	const svg = await satori(buildMarkup(), {
+	const svg = await satori(buildMarkup() as ReactNode, {
 		width: WIDTH,
 		height: HEIGHT,
 		fonts: [
@@ -311,7 +312,7 @@ export const GET: APIRoute = async () => {
 
 	const png = await sharp(Buffer.from(svg)).png().toBuffer();
 
-	return new Response(png, {
+	return new Response(new Uint8Array(png), {
 		headers: { "Content-Type": "image/png" },
 	});
 };
