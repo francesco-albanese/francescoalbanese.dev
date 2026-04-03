@@ -15,6 +15,8 @@ lint: ## run astro check
 	pnpm check
 
 deploy: build ## build + sync to S3 + invalidate CloudFront
+	@test -n "$(S3_BUCKET)" || (echo "Error: S3_BUCKET is not set" && exit 1)
+	@test -n "$(CF_DISTRIBUTION_ID)" || (echo "Error: CF_DISTRIBUTION_ID is not set" && exit 1)
 	aws s3 sync dist/ s3://$(S3_BUCKET) --delete
 	aws cloudfront create-invalidation --distribution-id $(CF_DISTRIBUTION_ID) --paths "/index.html" "/"
 
