@@ -5,6 +5,8 @@ import { ErrorOutput } from "./ErrorOutput";
 import { WhoamiOutput } from "./WhoamiOutput";
 import { SkillsOutput } from "./SkillsOutput";
 import { LinksOutput } from "./LinksOutput";
+import { ProjectsOutput } from "./ProjectsOutput";
+import { ExperienceOutput } from "./ExperienceOutput";
 
 type CommandContext = {
 	onExecuteCommand: (command: string) => void;
@@ -18,6 +20,8 @@ const handlers: Record<string, CommandHandler> = {
 	"/whoami": () => <WhoamiOutput />,
 	"/skills": () => <SkillsOutput />,
 	"/links": () => <LinksOutput />,
+	"/projects": () => <ProjectsOutput />,
+	"/experience": () => <ExperienceOutput />,
 };
 
 export type DispatchResult =
