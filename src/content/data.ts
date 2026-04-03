@@ -4,20 +4,47 @@ export const identity = {
 	location: "London, UK",
 	site: "francescoalbanese.dev",
 	bio: [
-		"Lead AI Engineer building intelligent systems at scale.",
-		"Specialising in LLM applications, RAG pipelines, and AI-driven developer tools.",
-		"Previously: full-stack engineering across fintech, healthtech, and e-commerce.",
+		"10+ years building software across fintech, cybersecurity, and travel.",
+		"Clients include WorldFirst (Ant Group), Red Sift, and Pirum Systems.",
+		"Currently focused on LLM agents, RAG pipelines, and AI-driven developer tools.",
+		"AWS Solutions Architect Associate.",
 	],
 } as const;
 
-export const skills = {
-	languages: ["TypeScript", "Python", "Go", "SQL"],
-	ai: ["LLM Agents", "RAG", "Text-to-SQL", "Prompt Engineering", "Fine-tuning"],
-	frontend: ["React", "Next.js", "Astro", "Tailwind CSS"],
-	backend: ["Node.js", "FastAPI", "PostgreSQL", "Redis"],
-	infrastructure: ["AWS", "Terraform", "Docker", "CI/CD"],
-	tools: ["Claude Code", "Cursor", "Mastra", "LangChain"],
-} as const;
+export type SkillCategory = {
+	label: string;
+	color: "purple" | "blue" | "teal" | "yellow";
+	items: readonly string[];
+};
+
+export const skills: readonly SkillCategory[] = [
+	{
+		label: "AI",
+		color: "purple",
+		items: [
+			"LLM Agents",
+			"RAG",
+			"Text-to-SQL",
+			"Prompt Engineering",
+			"Fine-tuning",
+		],
+	},
+	{
+		label: "Backend",
+		color: "blue",
+		items: ["Node.js", "FastAPI", "PostgreSQL", "Redis", "Python", "Go"],
+	},
+	{
+		label: "Infra",
+		color: "teal",
+		items: ["AWS", "Terraform", "Docker", "CI/CD"],
+	},
+	{
+		label: "Frontend",
+		color: "yellow",
+		items: ["React", "Next.js", "Astro", "Tailwind CSS", "TypeScript"],
+	},
+] as const;
 
 export const links = [
 	{ label: "GitHub", url: "https://github.com/francesco-albanese", icon: "gh" },
@@ -27,22 +54,49 @@ export const links = [
 		icon: "li",
 	},
 	{ label: "Email", url: "mailto:hello@francescoalbanese.dev", icon: "mail" },
+	{
+		label: "Website",
+		url: "https://francescoalbanese.dev",
+		icon: "web",
+	},
 ] as const;
 
 export const projects = [
 	{
-		name: "francescoalbanese.dev",
-		description: "This terminal portfolio — Astro + React + Tailwind",
-		url: "https://github.com/francesco-albanese/francescoalbanese.dev",
+		name: "aws-api-gateway-mtls",
+		description: "Asymmetric mTLS authentication for AWS API Gateway",
+		tags: ["AWS", "Terraform", "mTLS"],
+		url: "https://github.com/francesco-albanese/aws-api-gateway-mtls",
+	},
+	{
+		name: "python-token-generator",
+		description: "Lightweight cryptographic token generation utility",
+		tags: ["Python", "Crypto"],
+		url: "https://github.com/francesco-albanese/python-token-generator",
+	},
+	{
+		name: "aws-multi-account",
+		description: "Multi-account AWS infrastructure patterns via Terraform",
+		tags: ["AWS", "Terraform", "IaC"],
+		url: "https://github.com/francesco-albanese/aws-multi-account",
 	},
 ] as const;
 
 export const experience = [
 	{
 		role: "Lead AI Engineer",
-		company: "Current",
-		period: "2024 – present",
-		summary: "Building LLM-powered applications and AI infrastructure",
+		company: "Pirum Systems",
+		period: "Nov 2021 – Present",
+	},
+	{
+		role: "Senior Software Engineer",
+		company: "WorldFirst",
+		period: "Dec 2019 – Nov 2021",
+	},
+	{
+		role: "Software Engineer",
+		company: "Red Sift",
+		period: "Jan 2019 – Nov 2019",
 	},
 ] as const;
 

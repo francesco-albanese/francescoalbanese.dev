@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 import { commands } from "@/content/data";
 import { HelpOutput } from "./HelpOutput";
 import { ErrorOutput } from "./ErrorOutput";
+import { WhoamiOutput } from "./WhoamiOutput";
+import { SkillsOutput } from "./SkillsOutput";
+import { LinksOutput } from "./LinksOutput";
 
 type CommandContext = {
 	onExecuteCommand: (command: string) => void;
@@ -12,6 +15,9 @@ type CommandHandler = (ctx: CommandContext) => ReactNode;
 const handlers: Record<string, CommandHandler> = {
 	"/help": (ctx) => <HelpOutput onExecuteCommand={ctx.onExecuteCommand} />,
 	"/clear": () => null,
+	"/whoami": () => <WhoamiOutput />,
+	"/skills": () => <SkillsOutput />,
+	"/links": () => <LinksOutput />,
 };
 
 export type DispatchResult =
