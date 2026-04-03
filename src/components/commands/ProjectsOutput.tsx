@@ -1,4 +1,5 @@
 import { projects } from "@/content/data";
+import { useStreamLines } from "@/hooks/useStreamLines";
 
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 	return (
@@ -28,9 +29,11 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 }
 
 export function ProjectsOutput() {
+	const { visibleItems: visibleProjects } = useStreamLines(projects);
+
 	return (
 		<div className="space-y-3">
-			{projects.map((project) => (
+			{visibleProjects.map((project) => (
 				<ProjectCard key={project.name} project={project} />
 			))}
 		</div>
