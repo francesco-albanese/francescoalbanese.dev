@@ -7,7 +7,12 @@ export const identity = {
 		"10+ years building software across fintech, cybersecurity, and travel.",
 		"Clients include WorldFirst (Ant Group), Red Sift, and Pirum Systems.",
 		"Currently focused on LLM agents, RAG pipelines, and AI-driven developer tools.",
-		"AWS Solutions Architect Associate.",
+	],
+	certifications: [
+		{
+			label: "AWS Solutions Architect Associate",
+			url: "https://www.credly.com/badges/5765cd81-1a6c-48ef-b498-d1e5e9ab63a5",
+		},
 	],
 } as const;
 
@@ -50,7 +55,7 @@ export const links = [
 	{ label: "GitHub", url: "https://github.com/francesco-albanese", icon: "gh" },
 	{
 		label: "LinkedIn",
-		url: "https://linkedin.com/in/francescoalbanese",
+		url: "https://www.linkedin.com/in/albanesefrancesco/",
 		icon: "li",
 	},
 	{ label: "Email", url: "mailto:hello@francescoalbanese.dev", icon: "mail" },
@@ -97,6 +102,26 @@ export const experience = [
 		role: "Software Engineer",
 		company: "Red Sift",
 		period: "Jan 2019 – Nov 2019",
+	},
+	{
+		role: "Web Developer",
+		company: "Global Gaming",
+		period: "Feb 2018 – Dec 2018",
+	},
+	{
+		role: "Web Developer",
+		company: "3Bet Gaming / Betagy",
+		period: "Mar 2017 – Feb 2018",
+	},
+	{
+		role: "Web Developer",
+		company: "Booking and Co",
+		period: "Jun 2016 – Mar 2017",
+	},
+	{
+		role: "Web Developer",
+		company: "Multicom Products",
+		period: "May 2015 – Jun 2016",
 	},
 ] as const;
 
