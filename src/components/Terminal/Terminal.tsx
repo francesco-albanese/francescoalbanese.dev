@@ -43,8 +43,13 @@ export function Terminal() {
 	const { welcomeVisible, typedText, isAutoTyping, inputDisabled } =
 		useGreeting(executeCommand);
 
-	const { containerRef, showIndicator, handleScroll, scrollToBottom } =
-		useAutoScroll([entries.length, welcomeVisible]);
+	const {
+		containerRef,
+		showIndicator,
+		handleScroll,
+		scrollToBottom,
+		forceScrollToBottom,
+	} = useAutoScroll([entries.length, welcomeVisible]);
 
 	return (
 		<div className="flex flex-col h-[100dvh] bg-base">
@@ -83,7 +88,10 @@ export function Terminal() {
 				{showIndicator && <ScrollIndicator onClick={scrollToBottom} />}
 			</div>
 			<TerminalInput
-				onSubmit={executeCommand}
+				onSubmit={(input) => {
+					forceScrollToBottom();
+					executeCommand(input);
+				}}
 				onShowCompletions={(matches) => {
 					setEntries((prev) => [
 						...prev,
