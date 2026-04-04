@@ -57,7 +57,12 @@ export function Terminal() {
 					role="log"
 				>
 					{welcomeVisible && (
-						<p className="mb-3 text-muted">Welcome to francescoalbanese.dev</p>
+						<div className="mb-3">
+							<p className="text-muted">Welcome to francescoalbanese.dev</p>
+							<p className="text-faint text-xs">
+								Type /help for available commands.
+							</p>
+						</div>
 					)}
 					{entries.map((entry) => (
 						<div key={entry.id} className="mb-3">
