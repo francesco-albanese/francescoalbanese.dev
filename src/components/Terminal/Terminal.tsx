@@ -61,15 +61,16 @@ export function Terminal() {
 					)}
 					{entries.map((entry) => (
 						<div key={entry.id} className="mb-3">
-							<div className="text-muted">
-								<span className="text-secondary">
-									visitor@francescoalbanese.dev
-								</span>
-								<span className="text-muted">:</span>
-								<span className="text-blue">~</span>
-								<span className="text-muted">$ </span>
-								<span className="text-primary">{entry.prompt}</span>
-							</div>
+							{entry.prompt && (
+								<div className="text-muted">
+									<span className="text-teal">visitor</span>
+									<span className="text-muted">@francescoalbanese.dev</span>
+									<span className="text-muted">:</span>
+									<span className="text-blue">~</span>
+									<span className="text-muted">$ </span>
+									<span className="text-primary">{entry.prompt}</span>
+								</div>
+							)}
 							<div className="mt-1 ml-1">{entry.node}</div>
 						</div>
 					))}
