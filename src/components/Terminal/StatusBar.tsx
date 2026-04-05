@@ -17,7 +17,7 @@ export function StatusBar() {
 					</span>
 				))}
 			</div>
-			<span className="text-faint">
+			<span className="text-muted">
 				&copy; {new Date().getFullYear()} Francesco Albanese
 			</span>
 		</div>

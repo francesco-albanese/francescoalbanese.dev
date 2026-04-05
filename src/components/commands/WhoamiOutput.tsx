@@ -18,6 +18,19 @@ export function WhoamiOutput() {
 						{line}
 					</p>
 				))}
+				{visibleLines.length === identity.bio.length &&
+					identity.certifications.map((cert) => (
+						<p key={cert.label} className="text-muted">
+							<a
+								href={cert.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-coral hover:underline"
+							>
+								{cert.label}
+							</a>
+						</p>
+					))}
 			</div>
 		</div>
 	);

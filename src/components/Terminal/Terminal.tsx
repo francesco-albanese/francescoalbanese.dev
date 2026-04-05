@@ -4,6 +4,7 @@ import { HeaderBar } from "./HeaderBar";
 import { TerminalInput } from "./TerminalInput";
 import { StatusBar } from "./StatusBar";
 import { ScrollIndicator } from "./ScrollIndicator";
+import { AsciiPortrait } from "./AsciiPortrait";
 import { dispatch } from "@/components/commands/registry";
 import { useGreeting } from "@/hooks/useGreeting";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
@@ -43,21 +44,34 @@ export function Terminal() {
 	const { welcomeVisible, typedText, isAutoTyping, inputDisabled } =
 		useGreeting(executeCommand);
 
-	const { containerRef, showIndicator, handleScroll, scrollToBottom } =
-		useAutoScroll([entries.length, welcomeVisible]);
+	const {
+		containerRef,
+		showIndicator,
+		handleScroll,
+		scrollToBottom,
+		forceScrollToBottom,
+	} = useAutoScroll([entries.length, welcomeVisible]);
 
 	return (
 		<div className="flex flex-col h-[100dvh] bg-base">
 			<HeaderBar />
-			<div className="relative flex-1 overflow-hidden">
+			<div className="relative flex-1 overflow-hidden md:flex md:flex-row">
 				<main
 					ref={containerRef}
 					onScroll={handleScroll}
-					className="h-full overflow-y-auto px-4 py-2 font-mono text-sm"
+					className="h-full overflow-y-auto px-4 py-2 font-mono text-sm md:flex-1"
 					role="log"
 				>
+					<div className="flex justify-center mb-4 md:hidden">
+						<AsciiPortrait />
+					</div>
 					{welcomeVisible && (
-						<p className="mb-3 text-muted">Welcome to francescoalbanese.dev</p>
+						<div className="mb-3">
+							<p className="text-muted">Welcome to francescoalbanese.dev</p>
+							<p className="text-faint text-xs">
+								Type /help for available commands.
+							</p>
+						</div>
 					)}
 					{entries.map((entry) => (
 						<div key={entry.id} className="mb-3">
@@ -75,10 +89,16 @@ export function Terminal() {
 						</div>
 					))}
 				</main>
+				<aside className="hidden md:flex items-start justify-center sticky top-0 px-4 py-6 shrink-0">
+					<AsciiPortrait />
+				</aside>
 				{showIndicator && <ScrollIndicator onClick={scrollToBottom} />}
 			</div>
 			<TerminalInput
-				onSubmit={executeCommand}
+				onSubmit={(input) => {
+					forceScrollToBottom();
+					executeCommand(input);
+				}}
 				onShowCompletions={(matches) => {
 					setEntries((prev) => [
 						...prev,

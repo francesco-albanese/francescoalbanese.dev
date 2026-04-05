@@ -37,5 +37,21 @@ export function useAutoScroll(deps: unknown[]) {
 		setShowIndicator(false);
 	}, []);
 
-	return { containerRef, showIndicator, handleScroll, scrollToBottom };
+	const forceScrollToBottom = useCallback(() => {
+		const el = containerRef.current;
+		if (!el) return;
+		isNearBottomRef.current = true;
+		requestAnimationFrame(() => {
+			el.scrollTo({ top: el.scrollHeight });
+		});
+		setShowIndicator(false);
+	}, []);
+
+	return {
+		containerRef,
+		showIndicator,
+		handleScroll,
+		scrollToBottom,
+		forceScrollToBottom,
+	};
 }
