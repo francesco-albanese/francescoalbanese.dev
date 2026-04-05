@@ -75,9 +75,13 @@ export function TerminalInput({
 	}
 
 	return (
-		<div className="flex items-center gap-2 px-4 py-2 font-mono">
-			<span className="text-coral text-lg" aria-hidden="true">
-				›
+		<div className="flex items-center gap-2 border-t border-muted/30 px-5 py-3 font-mono text-sm">
+			<span aria-hidden="true">
+				<span className="text-teal">visitor</span>
+				<span className="text-muted">@francescoalbanese.dev</span>
+				<span className="text-muted">:</span>
+				<span className="text-blue">~</span>
+				<span className="text-muted">$ </span>
 			</span>
 			<div className="relative flex-1">
 				<input
@@ -91,7 +95,7 @@ export function TerminalInput({
 					onKeyDown={disabled ? undefined : handleKeyDown}
 					placeholder={disabled ? "" : "type /help for commands"}
 					aria-label="Terminal input"
-					className="w-full bg-transparent text-primary outline-none placeholder:text-faint focus-visible:ring-1 focus-visible:ring-coral"
+					className="w-full bg-transparent text-primary outline-none pl-1 placeholder:text-faint placeholder:pl-1 focus-visible:ring-1 focus-visible:ring-coral"
 					autoComplete="off"
 					autoFocus
 					spellCheck={false}
@@ -99,7 +103,7 @@ export function TerminalInput({
 				/>
 				{!displayValue && (
 					<span
-						className="animate-blink pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-coral"
+						className="animate-blink pointer-events-none absolute left-1 top-1/2 -translate-y-1/2 text-coral"
 						aria-hidden="true"
 					>
 						▊
