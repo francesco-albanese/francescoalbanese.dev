@@ -14,7 +14,11 @@ type OutputEntry = {
 	node: ReactNode;
 };
 
-export function Terminal() {
+type TerminalProps = {
+	profilePictureSrc: string;
+};
+
+export function Terminal({ profilePictureSrc }: TerminalProps) {
 	const [entries, setEntries] = useState<OutputEntry[]>([]);
 	const [history, setHistory] = useState<string[]>([]);
 	const nextIdRef = useRef(0);
@@ -61,7 +65,7 @@ export function Terminal() {
 				>
 					{welcomeVisible && (
 						<>
-							<WelcomeBox />
+							<WelcomeBox profilePictureSrc={profilePictureSrc} />
 							<p className="text-yellow text-sm font-mono mt-3 mb-3">
 								This is an interactive portfolio. Type commands to explore.
 							</p>
