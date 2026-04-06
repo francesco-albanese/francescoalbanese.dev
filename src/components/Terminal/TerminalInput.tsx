@@ -74,7 +74,7 @@ export function TerminalInput({
 	}
 
 	return (
-		<div className="flex items-center gap-2 border-y border-teal/40 px-6 py-3 font-mono text-sm">
+		<div className="flex items-center gap-2 border-y border-teal/40 px-3 py-3 font-mono text-sm">
 			<span className="text-coral" aria-hidden="true">
 				❯
 			</span>
