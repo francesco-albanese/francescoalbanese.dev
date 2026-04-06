@@ -9,6 +9,7 @@ type TerminalInputProps = {
 };
 
 const commandNames = Object.keys(commands);
+const PLACEHOLDER = "type /help for commands";
 
 export function TerminalInput({
 	onSubmit,
@@ -73,7 +74,7 @@ export function TerminalInput({
 	}
 
 	return (
-		<div className="flex items-center gap-2 border-t border-muted/30 px-6 py-4 font-mono text-sm">
+		<div className="flex items-center gap-2 border-y border-teal/40 px-6 py-3 font-mono text-sm">
 			<span className="text-coral" aria-hidden="true">
 				❯
 			</span>
@@ -87,7 +88,7 @@ export function TerminalInput({
 						setHistoryIndex(-1);
 					}}
 					onKeyDown={disabled ? undefined : handleKeyDown}
-					placeholder={disabled ? "" : "type /help for commands"}
+					placeholder={disabled ? "" : PLACEHOLDER}
 					aria-label="Terminal input"
 					className="w-full bg-transparent text-transparent caret-transparent outline-none p-0 placeholder:text-transparent"
 					autoComplete="off"
@@ -106,9 +107,7 @@ export function TerminalInput({
 					) : (
 						<>
 							<span className="animate-blink text-coral">▊</span>
-							<span className="text-secondary ml-1">
-								type /help for commands
-							</span>
+							<span className="text-muted ml-1">{PLACEHOLDER}</span>
 						</>
 					)}
 				</div>

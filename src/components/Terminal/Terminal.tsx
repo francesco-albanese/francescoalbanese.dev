@@ -62,7 +62,7 @@ export function Terminal() {
 					{welcomeVisible && (
 						<>
 							<WelcomeBox />
-							<p className="text-yellow text-sm font-mono mb-3">
+							<p className="text-yellow text-sm font-mono mt-3 mb-3">
 								This is an interactive portfolio. Type commands to explore.
 							</p>
 						</>
