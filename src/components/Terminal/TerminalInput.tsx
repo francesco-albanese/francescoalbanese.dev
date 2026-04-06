@@ -73,13 +73,9 @@ export function TerminalInput({
 	}
 
 	return (
-		<div className="flex items-center gap-2 border-t border-muted/30 px-5 py-3 font-mono text-sm">
-			<span aria-hidden="true">
-				<span className="text-teal">visitor</span>
-				<span className="text-muted">@francescoalbanese.dev</span>
-				<span className="text-muted">:</span>
-				<span className="text-blue">~</span>
-				<span className="text-muted">$ </span>
+		<div className="flex items-center gap-2 border-t border-muted/30 px-6 py-4 font-mono text-sm">
+			<span className="text-coral" aria-hidden="true">
+				❯
 			</span>
 			<div className="relative flex-1">
 				<input
@@ -93,20 +89,29 @@ export function TerminalInput({
 					onKeyDown={disabled ? undefined : handleKeyDown}
 					placeholder={disabled ? "" : "type /help for commands"}
 					aria-label="Terminal input"
-					className="w-full bg-transparent text-primary outline-none pl-1 placeholder:text-faint placeholder:pl-1 focus-visible:ring-1 focus-visible:ring-coral"
+					className="w-full bg-transparent text-transparent caret-transparent outline-none p-0 placeholder:text-transparent"
 					autoComplete="off"
 					autoFocus
 					spellCheck={false}
 					readOnly={disabled}
 				/>
-				{!displayValue && (
-					<span
-						className="animate-blink pointer-events-none absolute left-1 top-1/2 -translate-y-1/2 text-coral"
-						aria-hidden="true"
-					>
-						▊
-					</span>
-				)}
+				<div className="pointer-events-none absolute inset-0 flex items-center overflow-hidden">
+					{displayValue ? (
+						<>
+							<span className="text-primary whitespace-pre">
+								{displayValue}
+							</span>
+							<span className="animate-blink text-coral">▊</span>
+						</>
+					) : (
+						<>
+							<span className="animate-blink text-coral">▊</span>
+							<span className="text-secondary ml-1">
+								type /help for commands
+							</span>
+						</>
+					)}
+				</div>
 			</div>
 		</div>
 	);

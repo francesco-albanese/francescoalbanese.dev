@@ -59,7 +59,14 @@ export function Terminal() {
 					className="h-full overflow-y-auto px-4 py-4 font-mono text-sm"
 					role="log"
 				>
-					{welcomeVisible && <WelcomeBox />}
+					{welcomeVisible && (
+						<>
+							<WelcomeBox />
+							<p className="text-yellow text-sm font-mono mb-3">
+								This is an interactive portfolio. Type commands to explore.
+							</p>
+						</>
+					)}
 					{entries.map((entry) => (
 						<div key={entry.id} className="mb-3">
 							{entry.prompt && (
