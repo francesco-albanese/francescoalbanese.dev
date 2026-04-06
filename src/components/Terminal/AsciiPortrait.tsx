@@ -1,29 +1,64 @@
+import { useState } from "react";
+
 const PORTRAIT = `
-        ,##,,eew,
-      ,##############C
-   a###############@##
-  7####^\`^\`"7W7^"@####
-  @#@b\`         ^@#@^
-   ##^,,,,   ,,,,^#^
-  ,,@######"#######=
-   .''555"\` '5555b|
-   T"@  ,,,^,mg,@,*
-      %p||\`~~'.#\`
-       ^Wp  ,#T
-      :b''@@b^}
-   ,^     \` 'b 3-
- .<\` 'p   ^v   #   b   *.
-{      }   #"GpGb   [
-C      3 * @#######Nl      \`
-'            ^@##b     ($    !`.trim();
+.-:......:==------+-....:-:...:::.:*+:.-
+.-:.......-:....:-+*****++=----++==**:
+-+-.......--...-###***###%#+::-+==+%#=:-
+-+=:::::::==::+#%+-:..:::--*+.:-:.-#+::-
+-+=::::::-++:=#%%+:::.....:-*--=-:-#*--=
+-*=:::...:++::+%#-==+=---=++*=+*+=*%%+=*
+=*+===-:..==:::=+:::-:::----=-=*=-+%%+=*
+-++----:..==.::-*=:---=-==:-=-+*+=+%#==*
+-+=-:::...--..:-##*=----==**-:+**++##--=
+-+=--::. .:-....+%%*=:-=-*#=:-***++##-::
+-+=---:. .-==+=-:-+#######=--=**==+##-::
+-++--::::=++*###*=:::-=-+*+===**+=+##-::
+:=+---=++++***#####*+++*##*******++##-:-
+---==+********######%%%%###*****#*+**--+
+-:-+**########*###########*******##**--=
+:-+**#########****#########******##*#+=+
+-+*###############*#########*****%##*=-+
++*#######%%####################*%%%#*-:-
+*#######%%%%####################@%%%#+--
+*######%%%#####################%@%%%##++
+######%%%%##############*###*###%%%%%#+=
+######*#################**###***#%%%%%#+
+#####+=#%################**##***#%%%%##*
+###%*===#%%###############*****#*#%%###*
+####*+==*###################******#%###*
+#####*++*####################****+*%###*
+######**######################*****####*`.trim();
 
 export function AsciiPortrait() {
+	const [showPhoto, setShowPhoto] = useState(false);
+
+	const handleTap = (e: React.TouchEvent) => {
+		e.preventDefault();
+		setShowPhoto((prev) => !prev);
+	};
+
 	return (
-		<pre
-			className="text-muted text-[0.55rem] leading-[0.65rem] select-none font-mono whitespace-pre"
-			aria-hidden="true"
+		<div
+			className="relative cursor-pointer inline-block"
+			onMouseEnter={() => setShowPhoto(true)}
+			onMouseLeave={() => setShowPhoto(false)}
+			onTouchEnd={handleTap}
 		>
-			{PORTRAIT}
-		</pre>
+			<pre
+				className={`font-mono text-[0.55rem] leading-[0.65rem] select-none whitespace-pre transition-opacity duration-300 ${showPhoto ? "opacity-0" : "text-muted opacity-100"}`}
+				aria-hidden="true"
+			>
+				{PORTRAIT}
+			</pre>
+			<img
+				src="/profile-picture.jpg"
+				alt="Francesco Albanese – Lead AI Engineer, profile portrait"
+				width={320}
+				height={427}
+				loading="lazy"
+				decoding="async"
+				className={`absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300 ${showPhoto ? "opacity-100" : "opacity-0"}`}
+			/>
+		</div>
 	);
 }
