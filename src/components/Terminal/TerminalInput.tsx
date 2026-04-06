@@ -5,7 +5,6 @@ type TerminalInputProps = {
 	onSubmit: (value: string) => void;
 	onShowCompletions: (matches: string[]) => void;
 	history: string[];
-	autoTypedText?: string;
 	disabled?: boolean;
 };
 
@@ -15,14 +14,13 @@ export function TerminalInput({
 	onSubmit,
 	onShowCompletions,
 	history,
-	autoTypedText = "",
 	disabled = false,
 }: TerminalInputProps) {
 	const [value, setValue] = useState("");
 	const [historyIndex, setHistoryIndex] = useState(-1);
 	const draftRef = useRef("");
 
-	const displayValue = autoTypedText || value;
+	const displayValue = value;
 
 	function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
 		if (e.key === "Tab") {
