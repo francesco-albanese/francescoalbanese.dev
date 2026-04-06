@@ -30,6 +30,44 @@ export function useAutoScroll(deps: unknown[]) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, deps);
 
+	useEffect(() => {
+		const el = containerRef.current;
+		if (!el) return;
+
+		const observer = new ResizeObserver(() => {
+			if (isNearBottomRef.current) {
+				el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+			} else {
+				const nearBottom =
+					el.scrollHeight - el.scrollTop - el.clientHeight <
+					NEAR_BOTTOM_THRESHOLD;
+				if (!nearBottom) setShowIndicator(true);
+			}
+		});
+
+		for (const child of el.children) {
+			observer.observe(child);
+		}
+
+		const mutationObserver = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				for (const node of mutation.addedNodes) {
+					if (node instanceof Element) observer.observe(node);
+				}
+			}
+			if (isNearBottomRef.current) {
+				el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+			}
+		});
+
+		mutationObserver.observe(el, { childList: true });
+
+		return () => {
+			observer.disconnect();
+			mutationObserver.disconnect();
+		};
+	}, []);
+
 	const scrollToBottom = useCallback(() => {
 		const el = containerRef.current;
 		if (!el) return;

@@ -1,42 +1,64 @@
+import { useState } from "react";
+
 const PORTRAIT = `
-          .~?JJJJJJJJJJJ?~.
-       .!JJJJJJJJJJJJJJJJJJJ!.
-     .?JJJJ?~.          .~?JJJJ?.
-    !JJJJ~    .^!77777!^.    ~JJJJ!
-   ?JJJ~   .7YPGGGGGGGGGPY7.   ~JJJ?
-  7JJJ.  .JGGGGGGGGGGGGGGGGGJ.  .JJJ7
-  JJJ:  ^GGGGGGGGGGGGGGGGGGGGG^  :JJJ
-  JJ?  ~GGGGGGGGGGGGGGGGGGGGGG~   ?JJ
-  JJ?  JGGP!  7GGGGGG7  !PGGJ     ?JJ
-  JJ? .GG5 :YY.5GGGG5.YY: 5GG.   ?JJ
-  JJ? .GG5 :55.5GGGG5.55: 5GG.   ?JJ
-  JJ?  JGGP!  7GGGGGG7  !PGGJ     ?JJ
-  JJJ   YGGGGGGGGGGGGGGGGGGGY     JJJ
-  7JJ?   !PGGGGGGGGGGGGGGGP!    ?JJ7
-   ?JJJ.   :!JPGGGGGGGPJ!:   .JJJ?
-    !JJJ7.     .:^^^^:.     .7JJJ!
-     .?JJJY7!^.        .^!7YJJJ?.
-       .~?JJJJJYY?~~?YYJJJJJ?~.
-           .^~!?JJJJJJJ?!~^.
-         .!YPGGGGGGGGGGGGGPY!.
-        7GGGGGGGGGGGGGGGGGGGGG7
-       JGGG?^.            .^?GGGJ
-      5GGG^                  ^GGG5
-      PGGG                    GGGP
-      5GGG^     .^~~~~^.     ^GGG5
-       JGGG?: .:~^^^^^^~:. :?GGGJ
-        7GGGGGGG!        !GGGGGGG7
-         .!YPGGGGGY?77?YGGGGGPY!.
-            .:!?Y5PGGGP5Y?!:.
-`.trim();
+.-:......:==------+-....:-:...:::.:*+:.-
+.-:.......-:....:-+*****++=----++==**:
+-+-.......--...-###***###%#+::-+==+%#=:-
+-+=:::::::==::+#%+-:..:::--*+.:-:.-#+::-
+-+=::::::-++:=#%%+:::.....:-*--=-:-#*--=
+-*=:::...:++::+%#-==+=---=++*=+*+=*%%+=*
+=*+===-:..==:::=+:::-:::----=-=*=-+%%+=*
+-++----:..==.::-*=:---=-==:-=-+*+=+%#==*
+-+=-:::...--..:-##*=----==**-:+**++##--=
+-+=--::. .:-....+%%*=:-=-*#=:-***++##-::
+-+=---:. .-==+=-:-+#######=--=**==+##-::
+-++--::::=++*###*=:::-=-+*+===**+=+##-::
+:=+---=++++***#####*+++*##*******++##-:-
+---==+********######%%%%###*****#*+**--+
+-:-+**########*###########*******##**--=
+:-+**#########****#########******##*#+=+
+-+*###############*#########*****%##*=-+
++*#######%%####################*%%%#*-:-
+*#######%%%%####################@%%%#+--
+*######%%%#####################%@%%%##++
+######%%%%##############*###*###%%%%%#+=
+######*#################**###***#%%%%%#+
+#####+=#%################**##***#%%%%##*
+###%*===#%%###############*****#*#%%###*
+####*+==*###################******#%###*
+#####*++*####################****+*%###*
+######**######################*****####*`.trim();
 
 export function AsciiPortrait() {
+	const [showPhoto, setShowPhoto] = useState(false);
+
+	const handleTap = (e: React.TouchEvent) => {
+		e.preventDefault();
+		setShowPhoto((prev) => !prev);
+	};
+
 	return (
-		<pre
-			className="text-muted text-[0.55rem] leading-[0.65rem] select-none font-mono whitespace-pre"
-			aria-hidden="true"
+		<div
+			className="relative cursor-pointer inline-block"
+			onMouseEnter={() => setShowPhoto(true)}
+			onMouseLeave={() => setShowPhoto(false)}
+			onTouchEnd={handleTap}
 		>
-			{PORTRAIT}
-		</pre>
+			<pre
+				className={`font-mono text-[0.55rem] leading-[0.65rem] select-none whitespace-pre transition-opacity duration-300 ${showPhoto ? "opacity-0" : "text-muted opacity-100"}`}
+				aria-hidden="true"
+			>
+				{PORTRAIT}
+			</pre>
+			<img
+				src="/profile-picture.jpg"
+				alt="Francesco Albanese – Lead AI Engineer, profile portrait"
+				width={320}
+				height={427}
+				loading="lazy"
+				decoding="async"
+				className={`absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300 ${showPhoto ? "opacity-100" : "opacity-0"}`}
+			/>
+		</div>
 	);
 }
