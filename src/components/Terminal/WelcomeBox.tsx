@@ -2,7 +2,7 @@ import { AsciiPortrait } from "./AsciiPortrait";
 
 export function WelcomeBox() {
 	return (
-		<div className="relative border border-coral rounded mb-8 max-w-5xl">
+		<div className="relative border border-coral rounded mb-8 w-fit">
 			<span className="absolute -top-3 left-4 bg-base px-2 text-secondary text-sm font-mono">
 				~/francescoalbanese.dev <span className="text-muted">›</span> portfolio
 			</span>
@@ -33,14 +33,18 @@ export function WelcomeBox() {
 				</div>
 				<div className="md:hidden h-px bg-coral/30 mx-4" />
 				<div className="hidden md:block w-px bg-coral/30 my-4" />
-				<div className="p-4 font-mono text-sm">
-					<p className="text-coral font-semibold">Getting started</p>
-					<p className="text-secondary text-sm mt-1">
-						Run <span className="text-primary">/help</span> to explore my
-						experience, projects, and skills
-					</p>
-					<div className="my-3 h-px bg-coral/30" />
-					<AsciiPortrait />
+				<div className="font-mono text-sm">
+					<div className="p-4">
+						<p className="text-coral font-semibold">Getting started</p>
+						<p className="text-secondary text-sm mt-1">
+							Run <span className="text-primary">/help</span> to explore my
+							experience, projects, and skills
+						</p>
+					</div>
+					<div className="mx-4 h-px bg-coral/30" />
+					<div className="p-4">
+						<AsciiPortrait />
+					</div>
 				</div>
 			</div>
 		</div>
