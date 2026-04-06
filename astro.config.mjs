@@ -48,5 +48,7 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    // Prevent Vite from inlining fonts as base64 data: URIs — strict CSP blocks data: in font-src
+    build: { assetsInlineLimit: 0 },
   },
 });
