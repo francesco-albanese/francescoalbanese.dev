@@ -1,6 +1,10 @@
 import { AsciiPortrait } from "./AsciiPortrait";
 
-export function WelcomeBox() {
+type WelcomeBoxProps = {
+	profilePictureSrc: string;
+};
+
+export function WelcomeBox({ profilePictureSrc }: WelcomeBoxProps) {
 	return (
 		<div className="relative border border-coral rounded mb-8 w-fit">
 			<span className="absolute -top-3 left-4 bg-base px-2 text-secondary text-sm font-mono">
@@ -43,7 +47,7 @@ export function WelcomeBox() {
 					</div>
 					<div className="mx-4 h-px bg-coral/30" />
 					<div className="p-4">
-						<AsciiPortrait />
+						<AsciiPortrait profilePictureSrc={profilePictureSrc} />
 					</div>
 				</div>
 			</div>

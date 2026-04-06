@@ -15,14 +15,14 @@ export default defineConfig({
       registerType: 'autoUpdate',
       workbox: {
         navigateFallback: '/index.html',
-        globPatterns: ['**/*.{html,css,js,svg,png,woff2}'],
+        globPatterns: ['**/*.{html,css,js,svg,png,woff2,webp}'],
         runtimeCaching: [
           {
             urlPattern: /\.html$/,
             handler: 'NetworkFirst',
           },
           {
-            urlPattern: /\.(?:css|js|svg|png|woff2)$/,
+            urlPattern: /\.(?:css|js|svg|png|woff2|webp)$/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'assets',

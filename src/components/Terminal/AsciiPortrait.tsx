@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+type AsciiPortraitProps = {
+	profilePictureSrc: string;
+};
+
 const PORTRAIT = `
 .-:......:==------+-....:-:...:::.:*+:.-
 .-:.......-:....:-+*****++=----++==**:
@@ -29,7 +33,7 @@ const PORTRAIT = `
 #####*++*####################****+*%###*
 ######**######################*****####*`.trim();
 
-export function AsciiPortrait() {
+export function AsciiPortrait({ profilePictureSrc }: AsciiPortraitProps) {
 	const [showPhoto, setShowPhoto] = useState(false);
 
 	const handleTap = (e: React.TouchEvent) => {
@@ -51,10 +55,8 @@ export function AsciiPortrait() {
 				{PORTRAIT}
 			</pre>
 			<img
-				src="/profile-picture.jpg"
+				src={profilePictureSrc}
 				alt="Francesco Albanese – Lead AI Engineer, profile portrait"
-				width={320}
-				height={427}
 				loading="lazy"
 				decoding="async"
 				className={`absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300 ${showPhoto ? "opacity-100" : "opacity-0"}`}
