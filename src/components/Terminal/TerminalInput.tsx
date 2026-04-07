@@ -110,8 +110,15 @@ export function TerminalInput({
 
 	const showChips = !disabled && matches.length > 0;
 
+	const suggestionAnnouncement = showChips
+		? `${matches.length} suggestion${matches.length === 1 ? "" : "s"} available`
+		: "";
+
 	return (
 		<div className="border-y border-teal/40 font-mono text-sm">
+			<div className="sr-only" aria-live="polite" aria-atomic="true">
+				{suggestionAnnouncement}
+			</div>
 			{showChips && (
 				<div
 					data-testid="command-suggestions"
