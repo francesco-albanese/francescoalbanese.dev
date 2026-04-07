@@ -12,9 +12,7 @@ export function WelcomeBox({ profilePictureSrc }: WelcomeBoxProps) {
 			</span>
 			<div className="flex flex-col md:flex-row">
 				<div className="p-6 pt-8 shrink-0 flex flex-col items-center justify-center">
-					<p className="text-primary font-bold text-lg mb-3">
-						Welcome visitor!
-					</p>
+					<p className="text-primary font-bold text-lg mb-3">Welcome visitor!</p>
 					<pre className="font-mono text-xs text-cyan leading-none whitespace-pre">
 						{`    ______
    / ____/________ _____  ________  ______________
@@ -30,9 +28,7 @@ export function WelcomeBox({ profilePictureSrc }: WelcomeBoxProps) {
 					<div className="mt-10 font-mono text-xs text-center">
 						<p className="text-cyan font-semibold">Francesco Albanese</p>
 						<p className="text-coral mt-0.5">Lead AI Engineer</p>
-						<p className="text-secondary mt-0.5">
-							Python · TypeScript · AI · AWS
-						</p>
+						<p className="text-secondary mt-0.5">Python · TypeScript · AI · AWS</p>
 					</div>
 				</div>
 				<div className="md:hidden h-px bg-coral/30 mx-4" />
@@ -41,8 +37,8 @@ export function WelcomeBox({ profilePictureSrc }: WelcomeBoxProps) {
 					<div className="p-4">
 						<p className="text-coral font-semibold">Getting started</p>
 						<p className="text-secondary text-sm mt-1">
-							Run <span className="text-primary">/help</span> to explore my
-							experience, projects, and skills
+							Run <span className="text-primary">/help</span> to explore my experience, projects,
+							and skills
 						</p>
 					</div>
 					<div className="mx-4 h-px bg-coral/30" />

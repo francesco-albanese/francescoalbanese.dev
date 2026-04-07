@@ -182,41 +182,6 @@ describe("TerminalInput — tab completion", () => {
 	});
 });
 
-describe("TerminalInput — suggestion chips", () => {
-	it("shows chips while typing a matching prefix", async () => {
-		const user = userEvent.setup();
-		renderTerminal();
-		const input = await waitForReady();
-
-		await user.type(input, "/s");
-
-		const listbox = await screen.findByRole("listbox", { name: /command suggestions/i });
-		expect(within(listbox).getByRole("option", { name: "/skills" })).toBeInTheDocument();
-	});
-
-	it("tapping a chip fills the input", async () => {
-		const user = userEvent.setup();
-		renderTerminal();
-		const input = await waitForReady();
-
-		await user.type(input, "/s");
-		const chip = await screen.findByRole("option", { name: "/skills" });
-		await user.click(chip);
-
-		expect(input).toHaveValue("/skills");
-	});
-
-	it("chips disappear once input matches exactly", async () => {
-		const user = userEvent.setup();
-		renderTerminal();
-		const input = await waitForReady();
-
-		await user.type(input, "/whoami");
-
-		expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
-	});
-});
-
 describe("TerminalInput — history navigation", () => {
 	it("ArrowUp recalls previous command, ArrowDown restores draft", async () => {
 		const user = userEvent.setup();

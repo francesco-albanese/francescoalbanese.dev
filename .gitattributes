@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+pnpm-lock.yaml -text
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary

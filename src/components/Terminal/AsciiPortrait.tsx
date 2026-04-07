@@ -42,8 +42,10 @@ export function AsciiPortrait({ profilePictureSrc }: AsciiPortraitProps) {
 	};
 
 	return (
-		<div
-			className="relative cursor-pointer inline-block"
+		<button
+			type="button"
+			aria-label="Toggle profile portrait"
+			className="relative cursor-pointer inline-block bg-transparent border-0 p-0"
 			onMouseEnter={() => setShowPhoto(true)}
 			onMouseLeave={() => setShowPhoto(false)}
 			onTouchEnd={handleTap}
@@ -61,6 +63,6 @@ export function AsciiPortrait({ profilePictureSrc }: AsciiPortraitProps) {
 				decoding="async"
 				className={`absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300 ${showPhoto ? "opacity-100" : "opacity-0"}`}
 			/>
-		</div>
+		</button>
 	);
 }

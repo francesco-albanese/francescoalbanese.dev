@@ -1,7 +1,7 @@
-import type { APIRoute } from "astro";
-import type { ReactNode } from "react";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import type { APIRoute } from "astro";
+import type { ReactNode } from "react";
 import satori from "satori";
 import sharp from "sharp";
 import { identity } from "@/content/data";
@@ -30,10 +30,7 @@ async function loadFont(weight: string): Promise<ArrayBuffer> {
 		`node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-${weight}-normal.woff`,
 	);
 	const buffer = await readFile(path);
-	return buffer.buffer.slice(
-		buffer.byteOffset,
-		buffer.byteOffset + buffer.byteLength,
-	);
+	return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
 }
 
 function buildMarkup() {
@@ -291,10 +288,7 @@ function buildMarkup() {
 }
 
 export const GET: APIRoute = async () => {
-	const [fontRegular, fontBold] = await Promise.all([
-		loadFont("400"),
-		loadFont("700"),
-	]);
+	const [fontRegular, fontBold] = await Promise.all([loadFont("400"), loadFont("700")]);
 
 	const svg = await satori(buildMarkup() as ReactNode, {
 		width: WIDTH,

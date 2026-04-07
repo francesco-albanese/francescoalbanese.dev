@@ -26,13 +26,7 @@ export const skills: readonly SkillCategory[] = [
 	{
 		label: "AI",
 		color: "purple",
-		items: [
-			"LLM Agents",
-			"RAG",
-			"Text-to-SQL",
-			"Prompt Engineering",
-			"Fine-tuning",
-		],
+		items: ["LLM Agents", "RAG", "Text-to-SQL", "Prompt Engineering", "Fine-tuning"],
 	},
 	{
 		label: "Backend",

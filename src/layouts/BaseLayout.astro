@@ -3,39 +3,31 @@ import "@/styles/global.css";
 import { SEO } from "astro-seo";
 
 type Props = {
-  title: string;
+	title: string;
 };
 
 const { title } = Astro.props;
 
 const siteUrl = "https://francescoalbanese.dev";
 const description =
-  "Lead AI Engineer & Senior Staff Engineer based in London. Specialising in GenAI, LLMs, RAG, agentic workflows, and full-stack concurrent distributed systems.";
+	"Lead AI Engineer & Senior Staff Engineer based in London. Specialising in GenAI, LLMs, RAG, agentic workflows, and full-stack concurrent distributed systems.";
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Francesco Albanese",
-  jobTitle: "Lead AI Engineer",
-  url: siteUrl,
-  sameAs: [
-    "https://github.com/francesco-albanese",
-    "https://www.linkedin.com/in/albanesefrancesco/",
-  ],
-  knowsAbout: [
-    "LLMs",
-    "RAG",
-    "Agentic Workflows",
-    "TypeScript",
-    "Python",
-    "AWS",
-    "Terraform",
-  ],
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "London",
-    addressCountry: "GB",
-  },
+	"@context": "https://schema.org",
+	"@type": "Person",
+	name: "Francesco Albanese",
+	jobTitle: "Lead AI Engineer",
+	url: siteUrl,
+	sameAs: [
+		"https://github.com/francesco-albanese",
+		"https://www.linkedin.com/in/albanesefrancesco/",
+	],
+	knowsAbout: ["LLMs", "RAG", "Agentic Workflows", "TypeScript", "Python", "AWS", "Terraform"],
+	address: {
+		"@type": "PostalAddress",
+		addressLocality: "London",
+		addressCountry: "GB",
+	},
 };
 ---
 
