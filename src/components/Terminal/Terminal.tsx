@@ -23,6 +23,7 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 	const [history, setHistory] = useState<string[]>([]);
 	const [inputDraft, setInputDraft] = useState("");
 	const nextIdRef = useRef(0);
+	const lastEntryRef = useRef<HTMLDivElement>(null);
 
 	const executeCommand = useCallback((input: string) => {
 		const trimmed = input.trim();
@@ -63,8 +64,6 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 					onScroll={handleScroll}
 					className="h-full overflow-y-auto px-4 py-4 font-mono text-sm"
 					role="log"
-					aria-live="polite"
-					aria-atomic="false"
 				>
 					{welcomeVisible && (
 						<>
@@ -72,9 +71,10 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 							<p className="text-yellow text-sm font-mono mt-3 mb-3">{hintMessage}</p>
 						</>
 					)}
-					{entries.map((entry) => {
+					{entries.map((entry, idx) => {
+						const isLast = idx === entries.length - 1;
 						return (
-							<div key={entry.id} className="mb-3">
+							<div key={entry.id} ref={isLast ? lastEntryRef : undefined} className="mb-3">
 								{entry.prompt && (
 									<div className="text-muted">
 										<span className="text-teal">visitor</span>
@@ -96,6 +96,14 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 				onSubmit={(input) => {
 					forceScrollToBottom();
 					executeCommand(input);
+					requestAnimationFrame(() => {
+						requestAnimationFrame(() => {
+							lastEntryRef.current?.scrollIntoView({
+								block: "end",
+								behavior: "smooth",
+							});
+						});
+					});
 				}}
 				onShowCompletions={(matches) => {
 					setEntries((prev) => [
