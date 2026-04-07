@@ -154,7 +154,9 @@ describe("Terminal", () => {
 		const hint = () => screen.getByText(/^\/[a-z]+$/);
 		const before = hint().textContent;
 		input.focus();
-		await vi.advanceTimersByTimeAsync(5000);
+		await vi.advanceTimersByTimeAsync(2200);
+		expect(hint().textContent).toBe(before);
+		await vi.advanceTimersByTimeAsync(2200);
 		expect(hint().textContent).toBe(before);
 	});
 
