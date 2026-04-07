@@ -29,8 +29,13 @@ export function TerminalInput({
 	const [historyIndex, setHistoryIndex] = useState(-1);
 	const draftRef = useRef("");
 	const inputRef = useRef<HTMLInputElement>(null);
+	const didMountRef = useRef(false);
 
 	useEffect(() => {
+		if (!didMountRef.current) {
+			didMountRef.current = true;
+			return;
+		}
 		onValueChange?.(value);
 	}, [value, onValueChange]);
 
@@ -109,9 +114,8 @@ export function TerminalInput({
 		<div className="border-y border-teal/40 font-mono text-sm">
 			{showChips && (
 				<div
+					data-testid="command-suggestions"
 					className="flex gap-2 overflow-x-auto px-3 pt-2 pb-1 scrollbar-none"
-					role="listbox"
-					aria-label="Command suggestions"
 				>
 					{matches.map((cmd) => (
 						<button
@@ -119,8 +123,6 @@ export function TerminalInput({
 							type="button"
 							onClick={() => handleChipTap(cmd)}
 							className="shrink-0 rounded border border-teal/40 bg-overlay px-2 py-0.5 text-xs text-teal hover:border-teal hover:text-primary focus:outline-none focus:border-coral"
-							role="option"
-							aria-selected="false"
 						>
 							{cmd}
 						</button>

@@ -47,6 +47,10 @@ function Harness({ onReady }: { onReady: (h: HarnessHandle) => void }) {
 function setupContainer(el: HTMLElement, scrollHeight: number, clientHeight: number) {
 	Object.defineProperty(el, "scrollHeight", { value: scrollHeight, configurable: true });
 	Object.defineProperty(el, "clientHeight", { value: clientHeight, configurable: true });
+	el.scrollTo = function scrollTo(arg: ScrollToOptions | number, y?: number) {
+		const top = typeof arg === "number" ? (y ?? 0) : (arg?.top ?? 0);
+		Object.defineProperty(el, "scrollTop", { value: top, configurable: true, writable: true });
+	} as Element["scrollTo"];
 }
 
 describe("useAutoScroll", () => {
@@ -56,9 +60,7 @@ describe("useAutoScroll", () => {
 	});
 
 	it("wheel-up while scrolled away from bottom unfollows and shows indicator", () => {
-		let handle: HarnessHandle | undefined;
-		const { getByTestId } = render(<Harness onReady={(h) => (handle = h)} />);
-		void handle;
+		const { getByTestId } = render(<Harness onReady={() => {}} />);
 		const container = getByTestId("container");
 		setupContainer(container, 1000, 100);
 		container.scrollTop = 200;
@@ -129,6 +131,19 @@ describe("useAutoScroll", () => {
 			getByTestId("scroll-btn").click();
 		});
 		expect(getByTestId("indicator").textContent).toBe("no");
+	});
+
+	it("scrollToBottom mutates container scrollTop to scrollHeight", () => {
+		const { getByTestId } = render(<Harness onReady={() => {}} />);
+		const container = getByTestId("container");
+		setupContainer(container, 1000, 100);
+		container.scrollTop = 0;
+
+		act(() => {
+			getByTestId("scroll-btn").click();
+		});
+
+		expect(container.scrollTop).toBe(1000);
 	});
 
 	it("forceScrollToBottom re-engages follow", () => {

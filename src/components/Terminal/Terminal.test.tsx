@@ -41,6 +41,29 @@ describe("Terminal", () => {
 		expect(screen.getByRole("button", { name: "/projects" })).toBeInTheDocument();
 	});
 
+	it("submit on coarse pointer blurs the input to dismiss the mobile keyboard", async () => {
+		const original = window.matchMedia;
+		window.matchMedia = ((query: string) => ({
+			matches: query.includes("coarse"),
+			media: query,
+			onchange: null,
+			addListener: vi.fn(),
+			removeListener: vi.fn(),
+			addEventListener: vi.fn(),
+			removeEventListener: vi.fn(),
+			dispatchEvent: vi.fn(),
+		})) as typeof window.matchMedia;
+		try {
+			const { user, input } = await renderTerminal();
+			input.focus();
+			expect(document.activeElement).toBe(input);
+			await user.type(input, "/whoami{Enter}");
+			expect(document.activeElement).not.toBe(input);
+		} finally {
+			window.matchMedia = original;
+		}
+	});
+
 	it("clicking a help command executes it", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "/help{Enter}");
@@ -131,7 +154,7 @@ describe("Terminal", () => {
 
 	describe("command suggestion chips (mobile-friendly)", () => {
 		function chipsList() {
-			return screen.queryByRole("listbox", { name: /command suggestions/i });
+			return screen.queryByTestId("command-suggestions");
 		}
 
 		it("shows matching suggestion chips while typing a partial command", async () => {
@@ -140,10 +163,10 @@ describe("Terminal", () => {
 			const list = chipsList();
 			expect(list).not.toBeNull();
 			expect(
-				within(list as HTMLElement).getByRole("option", { name: "/projects" }),
+				within(list as HTMLElement).getByRole("button", { name: "/projects" }),
 			).toBeInTheDocument();
 			expect(
-				within(list as HTMLElement).queryByRole("option", { name: "/whoami" }),
+				within(list as HTMLElement).queryByRole("button", { name: "/whoami" }),
 			).not.toBeInTheDocument();
 		});
 
@@ -164,7 +187,7 @@ describe("Terminal", () => {
 		it("tapping a chip fills the input and keeps focus on it", async () => {
 			const { user, input } = await renderTerminal();
 			await user.type(input, "/s");
-			const skillsChip = await screen.findByRole("option", { name: "/skills" });
+			const skillsChip = await screen.findByRole("button", { name: "/skills" });
 			await user.click(skillsChip);
 			expect(input.value).toBe("/skills");
 			expect(input).toHaveFocus();
@@ -173,7 +196,7 @@ describe("Terminal", () => {
 		it("after tapping a chip, pressing Enter submits that command", async () => {
 			const { user, input } = await renderTerminal();
 			await user.type(input, "/wh");
-			await user.click(await screen.findByRole("option", { name: "/whoami" }));
+			await user.click(await screen.findByRole("button", { name: "/whoami" }));
 			await user.keyboard("{Enter}");
 			expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
 		});
@@ -187,7 +210,7 @@ describe("Terminal", () => {
 			const list = chipsList();
 			expect(list).not.toBeNull();
 			expect(
-				within(list as HTMLElement).getByRole("option", { name: "/clear" }),
+				within(list as HTMLElement).getByRole("button", { name: "/clear" }),
 			).toBeInTheDocument();
 		});
 
@@ -195,7 +218,7 @@ describe("Terminal", () => {
 			const { user, input } = await renderTerminal();
 			await user.type(input, "/whoami{Enter}");
 			await user.type(input, "/sk");
-			await user.click(await screen.findByRole("option", { name: "/skills" }));
+			await user.click(await screen.findByRole("button", { name: "/skills" }));
 			await user.keyboard("{ArrowUp}");
 			expect(input.value).toBe("/whoami");
 		});

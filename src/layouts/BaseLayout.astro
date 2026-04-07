@@ -1,12 +1,17 @@
 ---
 import "@/styles/global.css";
+import { getImage } from "astro:assets";
 import { SEO } from "astro-seo";
+import profilePicture from "@/assets/profile-picture.jpg";
 
 type Props = {
 	title: string;
 };
 
 const { title } = Astro.props;
+
+const favicon32 = await getImage({ src: profilePicture, width: 32, height: 32, format: "webp" });
+const favicon180 = await getImage({ src: profilePicture, width: 180, height: 180, format: "webp" });
 
 const siteUrl = "https://francescoalbanese.dev";
 const description =
@@ -36,7 +41,8 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/webp" sizes="32x32" href={favicon32.src} />
+    <link rel="apple-touch-icon" sizes="180x180" href={favicon180.src} />
     <meta name="theme-color" content="#1e1f2b" />
     <SEO
       title={title}
