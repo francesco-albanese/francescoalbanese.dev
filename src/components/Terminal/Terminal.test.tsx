@@ -149,6 +149,13 @@ describe("Terminal", () => {
 		expect(await screen.findByText(/nice try/i)).toBeInTheDocument();
 	});
 
+	it("'sudoku' does not trigger sudo egg", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "sudoku{Enter}");
+		expect(screen.queryByText(/nice try/i)).not.toBeInTheDocument();
+		expect(await screen.findByText(/command not found/i)).toBeInTheDocument();
+	});
+
 	it("ls easter egg lists commands", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "ls{Enter}");

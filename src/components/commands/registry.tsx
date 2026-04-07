@@ -55,7 +55,7 @@ export function dispatch(raw: string, ctx: CommandContext): DispatchResult | nul
 }
 
 function matchEasterEgg(input: string): ReactNode | null {
-	if (input.startsWith("sudo")) return <SudoOutput />;
+	if (input === "sudo" || input.startsWith("sudo ")) return <SudoOutput />;
 	if (input === "ls" || input === "/ls") return <LsOutput />;
 	if (input === "cat" || input === "/cat") return <CatOutput />;
 	return null;
