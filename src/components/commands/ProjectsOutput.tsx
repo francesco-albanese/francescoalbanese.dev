@@ -1,3 +1,4 @@
+import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 import { projects } from "@/content/data";
 import { useStreamLines } from "@/hooks/useStreamLines";
 
@@ -20,9 +21,10 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 				href={project.url}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="text-coral hover:underline text-sm inline-block"
+				className="text-coral underline underline-offset-2 hover:no-underline text-sm inline-flex items-center gap-1"
 			>
-				→ GitHub
+				GitHub
+				<ExternalLinkIcon />
 			</a>
 		</div>
 	);

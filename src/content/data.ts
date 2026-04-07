@@ -10,8 +10,8 @@ export const identity = {
 	],
 	certifications: [
 		{
-			label: "AWS Solutions Architect Associate",
-			url: "https://www.credly.com/badges/5765cd81-1a6c-48ef-b498-d1e5e9ab63a5",
+			label: "AWS Solutions Architect Associate Certified",
+			url: "https://www.credly.com/badges/f2170eb0-99b3-4e0d-812c-fc9d8e4b5468/public_url",
 		},
 	],
 } as const;
