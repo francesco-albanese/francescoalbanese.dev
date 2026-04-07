@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { dispatch } from "@/components/commands/registry";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
 import { useGreeting } from "@/hooks/useGreeting";
+import { CyclingHint } from "./CyclingHint";
 import { ScrollIndicator } from "./ScrollIndicator";
 import { StatusBar } from "./StatusBar";
 import { TerminalInput } from "./TerminalInput";
@@ -51,10 +52,9 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 	const { containerRef, showIndicator, handleScroll, scrollToBottom, forceScrollToBottom } =
 		useAutoScroll([entries.length, welcomeVisible]);
 
+	const [inputFocused, setInputFocused] = useState(false);
 	const draftTrimmed = inputDraft.trim();
-	const hintMessage = draftTrimmed
-		? `Press Enter to run ${draftTrimmed}`
-		: "This is an interactive portfolio. Type a command, then press Enter ↵ to explore";
+	const isEngaged = draftTrimmed.length > 0 || inputFocused;
 
 	return (
 		<div className="flex flex-col h-[100dvh] bg-base overflow-x-hidden">
@@ -68,7 +68,23 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 					{welcomeVisible && (
 						<>
 							<WelcomeBox profilePictureSrc={profilePictureSrc} />
-							<p className="text-yellow text-sm font-mono mt-3 mb-3">{hintMessage}</p>
+							<p className="text-yellow text-sm font-mono mt-3 mb-3">
+								{draftTrimmed ? (
+									<>
+										Press Enter to run{" "}
+										<span className="inline-block max-w-full align-bottom truncate">
+											{draftTrimmed}
+										</span>
+									</>
+								) : (
+									<>
+										This is an interactive portfolio. Type a command, then press Enter ↵ to explore.
+										<span className="block pt-2">
+											<CyclingHint paused={isEngaged} />
+										</span>
+									</>
+								)}
+							</p>
 						</>
 					)}
 					{entries.map((entry, idx) => {
@@ -116,6 +132,7 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 					]);
 				}}
 				onValueChange={setInputDraft}
+				onFocusChange={setInputFocused}
 				history={history}
 				disabled={inputDisabled}
 			/>

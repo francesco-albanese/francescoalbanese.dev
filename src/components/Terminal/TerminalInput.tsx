@@ -5,23 +5,34 @@ type TerminalInputProps = {
 	onSubmit: (value: string) => void;
 	onShowCompletions: (matches: string[]) => void;
 	onValueChange?: (value: string) => void;
+	onFocusChange?: (focused: boolean) => void;
 	history: string[];
 	disabled?: boolean;
 };
 
 const commandNames = Object.keys(commands);
-const PLACEHOLDER = "type /help or tap a suggestion";
+const PLACEHOLDER = "type help or tap a suggestion";
 
+// Chips use substring match (`includes`) for discovery — typing any letter
+// surfaces every command containing it. Tab autocomplete below uses prefix
+// match instead, because Tab's contract is "complete the unique candidate"
+// and substring would be ambiguous.
 function getMatches(value: string): string[] {
-	const trimmed = value.trim();
+	const trimmed = value.trim().toLowerCase();
 	if (!trimmed) return [];
-	return commandNames.filter((cmd) => cmd.startsWith(trimmed) && cmd !== trimmed);
+	const needle = trimmed.startsWith("/") ? trimmed.slice(1) : trimmed;
+	if (!needle) return commandNames;
+	return commandNames.filter((cmd) => {
+		const bare = cmd.slice(1);
+		return bare.includes(needle) && bare !== needle;
+	});
 }
 
 export function TerminalInput({
 	onSubmit,
 	onShowCompletions,
 	onValueChange,
+	onFocusChange,
 	history,
 	disabled = false,
 }: TerminalInputProps) {
@@ -60,9 +71,11 @@ export function TerminalInput({
 	function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
 		if (e.key === "Tab") {
 			e.preventDefault();
-			const input = value.trim();
-			if (!input) return;
-			const tabMatches = commandNames.filter((cmd) => cmd.startsWith(input));
+			const trimmed = value.trim().toLowerCase();
+			if (!trimmed) return;
+			const needle = trimmed.startsWith("/") ? trimmed.slice(1) : trimmed;
+			if (!needle) return;
+			const tabMatches = commandNames.filter((cmd) => cmd.slice(1).startsWith(needle));
 			if (tabMatches.length === 1 && tabMatches[0]) {
 				setValue(tabMatches[0]);
 			} else if (tabMatches.length > 1) {
@@ -150,6 +163,8 @@ export function TerminalInput({
 							updateValue(e.target.value);
 						}}
 						onKeyDown={disabled ? undefined : handleKeyDown}
+						onFocus={() => onFocusChange?.(true)}
+						onBlur={() => onFocusChange?.(false)}
 						placeholder={disabled ? "" : PLACEHOLDER}
 						aria-label="Terminal input"
 						className="w-full bg-transparent text-transparent caret-transparent outline-none p-0 placeholder:text-transparent text-[16px]"

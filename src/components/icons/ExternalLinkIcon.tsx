@@ -14,6 +14,7 @@ export function ExternalLinkIcon({ size = 12 }: ExternalLinkIconProps) {
 			strokeLinecap="round"
 			strokeLinejoin="round"
 			aria-hidden="true"
+			className="inline-block align-[-0.125em] ml-1"
 		>
 			<path d="M15 3h6v6" />
 			<path d="M10 14 21 3" />
