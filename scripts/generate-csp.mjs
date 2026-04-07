@@ -23,14 +23,11 @@ function sha256(content) {
 function extractHashes(html, tagName) {
 	const regex = new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, "g");
 	const hashes = [];
-	let match;
-	match = regex.exec(html);
-	while (match !== null) {
+	for (let match = regex.exec(html); match !== null; match = regex.exec(html)) {
 		const content = match[1].trim();
 		if (content && !match[0].includes("src=") && !match[0].includes('type="application/ld+json"')) {
 			hashes.push(`'sha256-${sha256(content)}'`);
 		}
-		match = regex.exec(html);
 	}
 	return hashes;
 }

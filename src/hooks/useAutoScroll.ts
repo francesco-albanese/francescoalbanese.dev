@@ -14,10 +14,7 @@ export function useAutoScroll(deps: unknown[]) {
 	}, []);
 
 	const handleScroll = useCallback(() => {
-		if (checkNearBottom()) {
-			followRef.current = true;
-			setShowIndicator(false);
-		}
+		if (followRef.current && checkNearBottom()) setShowIndicator(false);
 	}, [checkNearBottom]);
 
 	useEffect(() => {
@@ -33,32 +30,29 @@ export function useAutoScroll(deps: unknown[]) {
 		const onWheel = (e: WheelEvent) => {
 			if (e.deltaY < 0) unfollow();
 		};
-		let touchY: number | null = null;
+		const onKey = (e: KeyboardEvent) => {
+			if (["ArrowUp", "PageUp", "Home"].includes(e.key)) unfollow();
+		};
+		let touchY = 0;
 		const onTouchStart = (e: TouchEvent) => {
-			touchY = e.touches[0]?.clientY ?? null;
+			touchY = e.touches[0]?.clientY ?? 0;
 		};
 		const onTouchMove = (e: TouchEvent) => {
-			const y = e.touches[0]?.clientY;
-			if (y === undefined || touchY === null) return;
+			const y = e.touches[0]?.clientY ?? 0;
 			if (y > touchY) unfollow();
 			touchY = y;
 		};
-		const onTouchEnd = () => {
-			touchY = null;
-		};
 
 		el.addEventListener("wheel", onWheel, { passive: true });
+		el.addEventListener("keydown", onKey);
 		el.addEventListener("touchstart", onTouchStart, { passive: true });
 		el.addEventListener("touchmove", onTouchMove, { passive: true });
-		el.addEventListener("touchend", onTouchEnd, { passive: true });
-		el.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
 		return () => {
 			el.removeEventListener("wheel", onWheel);
+			el.removeEventListener("keydown", onKey);
 			el.removeEventListener("touchstart", onTouchStart);
 			el.removeEventListener("touchmove", onTouchMove);
-			el.removeEventListener("touchend", onTouchEnd);
-			el.removeEventListener("touchcancel", onTouchEnd);
 		};
 	}, [checkNearBottom]);
 
@@ -77,16 +71,8 @@ export function useAutoScroll(deps: unknown[]) {
 		const el = containerRef.current;
 		if (!el) return;
 
-		let rafPending = false;
 		const scrollDown = () => {
-			if (rafPending) return;
-			rafPending = true;
-			requestAnimationFrame(() => {
-				rafPending = false;
-				if (followRef.current && containerRef.current) {
-					containerRef.current.scrollTo({ top: containerRef.current.scrollHeight });
-				}
-			});
+			if (followRef.current) el.scrollTo({ top: el.scrollHeight });
 		};
 
 		const observer = new ResizeObserver(scrollDown);
@@ -94,12 +80,8 @@ export function useAutoScroll(deps: unknown[]) {
 
 		const mutationObserver = new MutationObserver((mutations) => {
 			for (const mutation of mutations) {
-				// Only observe direct children with ResizeObserver; subtree changes
-				// still trigger scrollDown via the mutation itself.
-				if (mutation.target === el) {
-					for (const node of mutation.addedNodes) {
-						if (node instanceof Element) observer.observe(node);
-					}
+				for (const node of mutation.addedNodes) {
+					if (node instanceof Element) observer.observe(node);
 				}
 			}
 			scrollDown();
