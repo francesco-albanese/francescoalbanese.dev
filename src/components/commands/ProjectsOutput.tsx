@@ -21,7 +21,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 				href={project.url}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="text-coral underline underline-offset-2 hover:no-underline text-sm inline-flex items-center gap-1"
+				className="text-coral underline underline-offset-2 hover:no-underline text-sm"
 			>
 				GitHub
 				<ExternalLinkIcon />
