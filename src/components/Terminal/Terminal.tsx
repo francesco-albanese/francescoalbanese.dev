@@ -70,7 +70,12 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 							<WelcomeBox profilePictureSrc={profilePictureSrc} />
 							<p className="text-yellow text-sm font-mono mt-3 mb-3">
 								{draftTrimmed ? (
-									`Press Enter to run ${draftTrimmed}`
+									<>
+										Press Enter to run{" "}
+										<span className="inline-block max-w-full align-bottom truncate">
+											{draftTrimmed}
+										</span>
+									</>
 								) : (
 									<>
 										This is an interactive portfolio. Type a command, then press Enter ↵ to explore.

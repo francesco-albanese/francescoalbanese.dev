@@ -58,10 +58,7 @@ export function CyclingHint({ paused }: CyclingHintProps) {
 			Try typing{" "}
 			<span className="inline-block text-coral" style={{ minWidth: `${longestCommand.length}ch` }}>
 				<span
-					style={{
-						opacity: visible ? 1 : 0,
-						transition: `opacity ${FADE_MS}ms ease`,
-					}}
+					className={`transition-opacity duration-200 ease-in-out ${visible ? "opacity-100" : "opacity-0"}`}
 				>
 					{current}
 				</span>

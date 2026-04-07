@@ -58,13 +58,11 @@ describe("CyclingHint", () => {
 	it("does not advance when prefers-reduced-motion is set", () => {
 		mockMatchMedia(true);
 		render(<CyclingHint paused={false} />);
-		const before = commandList.find((c) => screen.queryByText(c) !== null) as string;
-		expect(before).toBeDefined();
+		const initial = screen.getByText(/^\/[a-z]+$/).textContent;
 		act(() => {
 			vi.advanceTimersByTime(5000);
 		});
-		const after = commandList.find((c) => screen.queryByText(c) !== null) as string;
-		expect(after).toBe(before);
+		expect(screen.getByText(/^\/[a-z]+$/).textContent).toBe(initial);
 	});
 
 	it("unmounting mid-fade does not throw or warn", () => {

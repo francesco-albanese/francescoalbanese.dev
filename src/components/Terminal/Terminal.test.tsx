@@ -149,6 +149,15 @@ describe("Terminal", () => {
 		expect(await screen.findByText(/nice try/i)).toBeInTheDocument();
 	});
 
+	it("focusing the input pauses the cycling hint", async () => {
+		const { input } = await renderTerminal();
+		const hint = () => screen.getByText(/^\/[a-z]+$/);
+		const before = hint().textContent;
+		input.focus();
+		await vi.advanceTimersByTimeAsync(5000);
+		expect(hint().textContent).toBe(before);
+	});
+
 	it("'sudoku' does not trigger sudo egg", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "sudoku{Enter}");

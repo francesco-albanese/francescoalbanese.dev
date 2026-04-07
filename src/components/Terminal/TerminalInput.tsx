@@ -13,6 +13,10 @@ type TerminalInputProps = {
 const commandNames = Object.keys(commands);
 const PLACEHOLDER = "type help or tap a suggestion";
 
+// Chips use substring match (`includes`) for discovery — typing any letter
+// surfaces every command containing it. Tab autocomplete below uses prefix
+// match instead, because Tab's contract is "complete the unique candidate"
+// and substring would be ambiguous.
 function getMatches(value: string): string[] {
 	const trimmed = value.trim().toLowerCase();
 	if (!trimmed) return [];
