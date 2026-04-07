@@ -152,7 +152,7 @@ export function TerminalInput({
 						onKeyDown={disabled ? undefined : handleKeyDown}
 						placeholder={disabled ? "" : PLACEHOLDER}
 						aria-label="Terminal input"
-						className="w-full bg-transparent text-transparent caret-transparent outline-none p-0 placeholder:text-transparent"
+						className="w-full bg-transparent text-transparent caret-transparent outline-none p-0 placeholder:text-transparent text-[16px]"
 						autoComplete="off"
 						autoCapitalize="off"
 						autoCorrect="off"

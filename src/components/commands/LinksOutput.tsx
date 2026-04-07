@@ -1,3 +1,4 @@
+import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 import { links } from "@/content/data";
 import { useStreamLines } from "@/hooks/useStreamLines";
 
@@ -13,9 +14,10 @@ export function LinksOutput() {
 						href={link.url}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-coral hover:underline"
+						className="text-coral underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
 					>
 						{link.url.replace(/^(mailto:|https?:\/\/)/, "")}
+						{!link.url.startsWith("mailto:") && <ExternalLinkIcon />}
 					</a>
 				</div>
 			))}
