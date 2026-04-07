@@ -1,0 +1,263 @@
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { Terminal } from "./Terminal";
+
+beforeEach(() => {
+	cleanup();
+	document.body.innerHTML = "";
+	vi.useFakeTimers({ shouldAdvanceTime: true });
+});
+
+afterEach(() => {
+	vi.runOnlyPendingTimers();
+	vi.useRealTimers();
+	cleanup();
+});
+
+async function renderTerminal() {
+	const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+	render(<Terminal profilePictureSrc="/test.webp" />);
+	await vi.advanceTimersByTimeAsync(400);
+	const input = await screen.findByLabelText(/terminal input/i);
+	await waitFor(() => expect(input).not.toHaveAttribute("readonly"));
+	return { user, input: input as HTMLInputElement };
+}
+
+describe("Terminal", () => {
+	it("disables input until greeting completes, then enables it", async () => {
+		render(<Terminal profilePictureSrc="/test.webp" />);
+		const input = screen.getByLabelText(/terminal input/i);
+		expect(input).toHaveAttribute("readonly");
+		await vi.advanceTimersByTimeAsync(400);
+		await waitFor(() => expect(input).not.toHaveAttribute("readonly"));
+	});
+
+	it("runs /help and lists all commands", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "/help{Enter}");
+		expect(await screen.findByText("Available commands:")).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "/whoami" })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "/projects" })).toBeInTheDocument();
+	});
+
+	it("submit on coarse pointer blurs the input to dismiss the mobile keyboard", async () => {
+		const original = window.matchMedia;
+		window.matchMedia = ((query: string) => ({
+			matches: query.includes("coarse"),
+			media: query,
+			onchange: null,
+			addListener: vi.fn(),
+			removeListener: vi.fn(),
+			addEventListener: vi.fn(),
+			removeEventListener: vi.fn(),
+			dispatchEvent: vi.fn(),
+		})) as typeof window.matchMedia;
+		try {
+			const { user, input } = await renderTerminal();
+			input.focus();
+			expect(document.activeElement).toBe(input);
+			await user.type(input, "/whoami{Enter}");
+			expect(document.activeElement).not.toBe(input);
+		} finally {
+			window.matchMedia = original;
+		}
+	});
+
+	it("clicking a help command executes it", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "/help{Enter}");
+		const whoamiBtn = await screen.findByRole("button", { name: "/whoami" });
+		await user.click(whoamiBtn);
+		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+	});
+
+	it("/clear empties the output log", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "/whoami{Enter}");
+		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+		await user.type(input, "/clear{Enter}");
+		await waitFor(() => expect(screen.queryByText(/WorldFirst/i)).not.toBeInTheDocument());
+	});
+
+	it("unknown command shows error and suggests /help", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "/nope{Enter}");
+		expect(await screen.findByText(/command not found/i)).toBeInTheDocument();
+	});
+
+	it("Tab autocompletes a unique prefix", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "/who");
+		await user.keyboard("{Tab}");
+		expect(input.value).toBe("/whoami");
+	});
+
+	it("Tab on ambiguous prefix shows completions list", async () => {
+		const { user, input } = await renderTerminal();
+		await user.clear(input);
+		await user.type(input, "/");
+		await user.keyboard("{Tab}");
+		const log = screen.getByRole("log");
+		expect(
+			within(log).getByText("/help /clear /whoami /skills /links /projects /experience"),
+		).toBeInTheDocument();
+	});
+
+	it("ArrowUp/ArrowDown navigate command history", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "/whoami{Enter}");
+		await user.type(input, "/skills{Enter}");
+		await user.keyboard("{ArrowUp}");
+		expect(input.value).toBe("/skills");
+		await user.keyboard("{ArrowUp}");
+		expect(input.value).toBe("/whoami");
+		await user.keyboard("{ArrowDown}");
+		expect(input.value).toBe("/skills");
+		await user.keyboard("{ArrowDown}");
+		expect(input.value).toBe("");
+	});
+
+	it("submitting whitespace-only input is a no-op", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "   {Enter}");
+		const log = screen.getByRole("log");
+		expect(within(log).queryByText(/command not found/i)).not.toBeInTheDocument();
+	});
+
+	it("sudo easter egg responds", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "sudo rm -rf /{Enter}");
+		expect(await screen.findByText(/nice try/i)).toBeInTheDocument();
+	});
+
+	it("ls easter egg lists commands", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "ls{Enter}");
+		expect(await screen.findByText(/whoami\.md/)).toBeInTheDocument();
+	});
+
+	it("renders /projects, /skills, /experience, /links without crashing", async () => {
+		const { user, input } = await renderTerminal();
+		for (const cmd of ["/projects", "/skills", "/experience", "/links"]) {
+			await user.type(input, `${cmd}{Enter}`);
+		}
+		const log = screen.getByRole("log");
+		expect(log).toBeInTheDocument();
+	});
+
+	it("input clears after Enter", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "/whoami{Enter}");
+		expect(input.value).toBe("");
+	});
+
+	describe("command suggestion chips (mobile-friendly)", () => {
+		function chipsList() {
+			return screen.queryByTestId("command-suggestions");
+		}
+
+		it("shows matching suggestion chips while typing a partial command", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/p");
+			const list = chipsList();
+			expect(list).not.toBeNull();
+			expect(
+				within(list as HTMLElement).getByRole("button", { name: "/projects" }),
+			).toBeInTheDocument();
+			expect(
+				within(list as HTMLElement).queryByRole("button", { name: "/whoami" }),
+			).not.toBeInTheDocument();
+		});
+
+		it("hides chips when input is empty", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/p");
+			expect(chipsList()).not.toBeNull();
+			await user.clear(input);
+			expect(chipsList()).toBeNull();
+		});
+
+		it("hides chips when input exactly matches a command (no further completion)", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/whoami");
+			expect(chipsList()).toBeNull();
+		});
+
+		it("tapping a chip fills the input and keeps focus on it", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/s");
+			const skillsChip = await screen.findByRole("button", { name: "/skills" });
+			await user.click(skillsChip);
+			expect(input.value).toBe("/skills");
+			expect(input).toHaveFocus();
+		});
+
+		it("after tapping a chip, pressing Enter submits that command", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/wh");
+			await user.click(await screen.findByRole("button", { name: "/whoami" }));
+			await user.keyboard("{Enter}");
+			expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+		});
+
+		it("re-shows chips after typing → clearing → typing again", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/p");
+			expect(chipsList()).not.toBeNull();
+			await user.clear(input);
+			await user.type(input, "/c");
+			const list = chipsList();
+			expect(list).not.toBeNull();
+			expect(
+				within(list as HTMLElement).getByRole("button", { name: "/clear" }),
+			).toBeInTheDocument();
+		});
+
+		it("history navigation still works after using a chip", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/whoami{Enter}");
+			await user.type(input, "/sk");
+			await user.click(await screen.findByRole("button", { name: "/skills" }));
+			await user.keyboard("{ArrowUp}");
+			expect(input.value).toBe("/whoami");
+		});
+
+		it("chips never throw on whitespace or unicode input — only real command matches", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "   ");
+			expect(chipsList()).toBeNull();
+			await user.clear(input);
+			await user.type(input, "🦊");
+			expect(chipsList()).toBeNull();
+		});
+	});
+
+	describe("submit button (mobile)", () => {
+		it("submits the current input when clicked", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/whoami");
+			const submitBtn = screen.getByRole("button", { name: /run command/i });
+			await user.click(submitBtn);
+			expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+			expect(input.value).toBe("");
+		});
+
+		it("is disabled while input is empty or whitespace-only", async () => {
+			const { user, input } = await renderTerminal();
+			const submitBtn = screen.getByRole("button", { name: /run command/i });
+			expect(submitBtn).toBeDisabled();
+			await user.type(input, "   ");
+			expect(submitBtn).toBeDisabled();
+		});
+
+		it("clicking submit on whitespace-only input is a no-op", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "  ");
+			const submitBtn = screen.getByRole("button", { name: /run command/i });
+			await user.click(submitBtn);
+			const log = screen.getByRole("log");
+			expect(within(log).queryByText(/command not found/i)).not.toBeInTheDocument();
+		});
+	});
+});

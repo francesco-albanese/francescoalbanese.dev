@@ -44,14 +44,14 @@ export function AsciiPortrait({ profilePictureSrc }: AsciiPortraitProps) {
 	return (
 		<button
 			type="button"
-			aria-label="Toggle profile portrait"
-			className="relative cursor-pointer inline-block bg-transparent border-0 p-0"
+			className="relative cursor-pointer inline-block mx-auto md:mx-0 bg-transparent border-0 p-0"
 			onMouseEnter={() => setShowPhoto(true)}
 			onMouseLeave={() => setShowPhoto(false)}
 			onTouchEnd={handleTap}
+			aria-label="Toggle profile portrait"
 		>
 			<pre
-				className={`font-mono text-[0.55rem] leading-[0.65rem] select-none whitespace-pre transition-opacity duration-300 ${showPhoto ? "opacity-0" : "text-muted opacity-100"}`}
+				className={`font-mono text-[clamp(0.4rem,1.4vw,0.55rem)] leading-[1.1] select-none whitespace-pre transition-opacity duration-300 ${showPhoto ? "opacity-0" : "text-muted opacity-100"}`}
 				aria-hidden="true"
 			>
 				{PORTRAIT}
