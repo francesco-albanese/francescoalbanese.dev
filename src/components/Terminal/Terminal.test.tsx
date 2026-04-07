@@ -80,9 +80,27 @@ describe("Terminal", () => {
 		await waitFor(() => expect(screen.queryByText(/WorldFirst/i)).not.toBeInTheDocument());
 	});
 
-	it("unknown command shows error and suggests /help", async () => {
+	it("unknown command shows error", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "/nope{Enter}");
+		expect(await screen.findByText(/command not found/i)).toBeInTheDocument();
+	});
+
+	it("bare 'help' (no slash) runs /help", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "help{Enter}");
+		expect(await screen.findByText("Available commands:")).toBeInTheDocument();
+	});
+
+	it("bare command is case-insensitive", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "WHOAMI{Enter}");
+		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+	});
+
+	it("bare typo still shows error", async () => {
+		const { user, input } = await renderTerminal();
+		await user.type(input, "halp{Enter}");
 		expect(await screen.findByText(/command not found/i)).toBeInTheDocument();
 	});
 
@@ -221,6 +239,53 @@ describe("Terminal", () => {
 			await user.click(await screen.findByRole("button", { name: "/skills" }));
 			await user.keyboard("{ArrowUp}");
 			expect(input.value).toBe("/whoami");
+		});
+
+		it("typing a lone '/' shows all available command chips", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "/");
+			const list = chipsList();
+			expect(list).not.toBeNull();
+			for (const cmd of [
+				"/help",
+				"/clear",
+				"/whoami",
+				"/skills",
+				"/links",
+				"/projects",
+				"/experience",
+			]) {
+				expect(within(list as HTMLElement).getByRole("button", { name: cmd })).toBeInTheDocument();
+			}
+		});
+
+		it("substring match: typing 's' surfaces every command containing s", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "s");
+			const list = chipsList();
+			expect(list).not.toBeNull();
+			expect(
+				within(list as HTMLElement).getByRole("button", { name: "/skills" }),
+			).toBeInTheDocument();
+			expect(
+				within(list as HTMLElement).getByRole("button", { name: "/links" }),
+			).toBeInTheDocument();
+			expect(
+				within(list as HTMLElement).getByRole("button", { name: "/projects" }),
+			).toBeInTheDocument();
+			expect(
+				within(list as HTMLElement).queryByRole("button", { name: "/whoami" }),
+			).not.toBeInTheDocument();
+		});
+
+		it("bare prefix without slash shows matching chips (case-insensitive)", async () => {
+			const { user, input } = await renderTerminal();
+			await user.type(input, "HE");
+			const list = chipsList();
+			expect(list).not.toBeNull();
+			expect(
+				within(list as HTMLElement).getByRole("button", { name: "/help" }),
+			).toBeInTheDocument();
 		});
 
 		it("chips never throw on whitespace or unicode input — only real command matches", async () => {

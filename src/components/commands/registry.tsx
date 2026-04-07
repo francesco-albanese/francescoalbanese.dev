@@ -31,26 +31,25 @@ export function dispatch(raw: string, ctx: CommandContext): DispatchResult | nul
 	const input = raw.trim();
 	if (!input) return null;
 
-	if (input === "/clear") {
+	const egg = matchEasterEgg(input.toLowerCase());
+	if (egg) return { type: "output", node: egg };
+
+	const normalized = input.startsWith("/") ? input.toLowerCase() : `/${input.toLowerCase()}`;
+
+	if (normalized === "/clear") {
 		return { type: "clear" };
 	}
 
-	if (input.startsWith("/")) {
-		const handler = handlers[input];
-		if (handler) {
-			return { type: "output", node: handler(ctx) };
-		}
-		if (input in commands) {
-			return {
-				type: "output",
-				node: <p className="text-muted">{input} — coming soon</p>,
-			};
-		}
-		return { type: "output", node: <ErrorOutput input={input} /> };
+	const handler = handlers[normalized];
+	if (handler) {
+		return { type: "output", node: handler(ctx) };
 	}
-
-	const egg = matchEasterEgg(input);
-	if (egg) return { type: "output", node: egg };
+	if (normalized in commands) {
+		return {
+			type: "output",
+			node: <p className="text-muted">{normalized} — coming soon</p>,
+		};
+	}
 
 	return { type: "output", node: <ErrorOutput input={input} /> };
 }
