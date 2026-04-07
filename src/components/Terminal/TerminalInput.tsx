@@ -1,9 +1,10 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { commands } from "@/content/data";
 
 type TerminalInputProps = {
 	onSubmit: (value: string) => void;
 	onShowCompletions: (matches: string[]) => void;
+	onValueChange?: (value: string) => void;
 	history: string[];
 	disabled?: boolean;
 };
@@ -14,12 +15,18 @@ const PLACEHOLDER = "type /help for commands";
 export function TerminalInput({
 	onSubmit,
 	onShowCompletions,
+	onValueChange,
 	history,
 	disabled = false,
 }: TerminalInputProps) {
 	const [value, setValue] = useState("");
 	const [historyIndex, setHistoryIndex] = useState(-1);
 	const draftRef = useRef("");
+
+	function updateValue(next: string) {
+		setValue(next);
+		onValueChange?.(next);
+	}
 
 	const displayValue = value;
 
@@ -30,7 +37,7 @@ export function TerminalInput({
 			if (!input) return;
 			const matches = commandNames.filter((cmd) => cmd.startsWith(input));
 			if (matches.length === 1 && matches[0]) {
-				setValue(matches[0]);
+				updateValue(matches[0]);
 			} else if (matches.length > 1) {
 				onShowCompletions(matches);
 			}
@@ -49,10 +56,7 @@ export function TerminalInput({
 		if (e.key === "ArrowUp") {
 			e.preventDefault();
 			if (history.length === 0) return;
-			const next =
-				historyIndex === -1
-					? history.length - 1
-					: Math.max(0, historyIndex - 1);
+			const next = historyIndex === -1 ? history.length - 1 : Math.max(0, historyIndex - 1);
 			if (historyIndex === -1) draftRef.current = value;
 			setHistoryIndex(next);
 			setValue(history[next] ?? "");
@@ -92,16 +96,13 @@ export function TerminalInput({
 					aria-label="Terminal input"
 					className="w-full bg-transparent text-transparent caret-transparent outline-none p-0 placeholder:text-transparent"
 					autoComplete="off"
-					autoFocus
 					spellCheck={false}
 					readOnly={disabled}
 				/>
 				<div className="pointer-events-none absolute inset-0 flex items-center overflow-hidden">
 					{displayValue ? (
 						<>
-							<span className="text-primary whitespace-pre">
-								{displayValue}
-							</span>
+							<span className="text-primary whitespace-pre">{displayValue}</span>
 							<span className="animate-blink text-coral">▊</span>
 						</>
 					) : (

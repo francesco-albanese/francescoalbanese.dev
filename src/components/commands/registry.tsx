@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
 import { commands } from "@/content/data";
-import { HelpOutput } from "./HelpOutput";
+import { CatOutput, LsOutput, SudoOutput } from "./EasterEggs";
 import { ErrorOutput } from "./ErrorOutput";
-import { WhoamiOutput } from "./WhoamiOutput";
-import { SkillsOutput } from "./SkillsOutput";
+import { ExperienceOutput } from "./ExperienceOutput";
+import { HelpOutput } from "./HelpOutput";
 import { LinksOutput } from "./LinksOutput";
 import { ProjectsOutput } from "./ProjectsOutput";
-import { ExperienceOutput } from "./ExperienceOutput";
-import { SudoOutput, LsOutput, CatOutput } from "./EasterEggs";
+import { SkillsOutput } from "./SkillsOutput";
+import { WhoamiOutput } from "./WhoamiOutput";
 
 type CommandContext = {
 	onExecuteCommand: (command: string) => void;
@@ -25,14 +25,9 @@ const handlers: Record<string, CommandHandler> = {
 	"/experience": () => <ExperienceOutput />,
 };
 
-export type DispatchResult =
-	| { type: "output"; node: ReactNode }
-	| { type: "clear" };
+export type DispatchResult = { type: "output"; node: ReactNode } | { type: "clear" };
 
-export function dispatch(
-	raw: string,
-	ctx: CommandContext,
-): DispatchResult | null {
+export function dispatch(raw: string, ctx: CommandContext): DispatchResult | null {
 	const input = raw.trim();
 	if (!input) return null;
 

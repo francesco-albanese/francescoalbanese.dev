@@ -15,17 +15,9 @@ const labelClasses: Record<"purple" | "blue" | "teal" | "yellow", string> = {
 	yellow: "text-yellow",
 };
 
-function Tag({
-	label,
-	color,
-}: {
-	label: string;
-	color: "purple" | "blue" | "teal" | "yellow";
-}) {
+function Tag({ label, color }: { label: string; color: "purple" | "blue" | "teal" | "yellow" }) {
 	return (
-		<span
-			className={`inline-block rounded-full px-2 py-0.5 text-xs ${tagClasses[color]}`}
-		>
+		<span className={`inline-block rounded-full px-2 py-0.5 text-xs ${tagClasses[color]}`}>
 			{label}
 		</span>
 	);
@@ -38,9 +30,7 @@ export function SkillsOutput() {
 		<div className="space-y-3">
 			{visibleGroups.map((group) => (
 				<div key={group.label} className="space-y-1">
-					<p className={`${labelClasses[group.color]} font-semibold`}>
-						{group.label}
-					</p>
+					<p className={`${labelClasses[group.color]} font-semibold`}>{group.label}</p>
 					<div className="ml-2 flex flex-wrap gap-1.5">
 						{group.items.map((item) => (
 							<Tag key={item} label={item} color={group.color} />
