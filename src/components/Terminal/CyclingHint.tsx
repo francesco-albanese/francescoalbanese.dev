@@ -13,11 +13,7 @@ function prefersReducedMotion(): boolean {
 	return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-type CyclingHintProps = {
-	paused: boolean;
-};
-
-export function CyclingHint({ paused }: CyclingHintProps) {
+export function CyclingHint() {
 	const reducedMotion = useMemo(prefersReducedMotion, []);
 	const initialIndex = useMemo(
 		() =>
@@ -32,7 +28,7 @@ export function CyclingHint({ paused }: CyclingHintProps) {
 	const [visible, setVisible] = useState(true);
 
 	useEffect(() => {
-		if (reducedMotion || paused || commandList.length === 0) {
+		if (reducedMotion || commandList.length === 0) {
 			setVisible(true);
 			return;
 		}
@@ -49,7 +45,7 @@ export function CyclingHint({ paused }: CyclingHintProps) {
 			if (fadeTimeout !== undefined) window.clearTimeout(fadeTimeout);
 			setVisible(true);
 		};
-	}, [reducedMotion, paused]);
+	}, [reducedMotion]);
 
 	const current = commandList[index] ?? FALLBACK;
 

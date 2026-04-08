@@ -37,8 +37,9 @@ describe("Terminal", () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "/help{Enter}");
 		expect(await screen.findByText("Available commands:")).toBeInTheDocument();
-		expect(screen.getByRole("button", { name: "/whoami" })).toBeInTheDocument();
-		expect(screen.getByRole("button", { name: "/projects" })).toBeInTheDocument();
+		const log = screen.getByRole("log");
+		expect(within(log).getByRole("button", { name: "/whoami" })).toBeInTheDocument();
+		expect(within(log).getByRole("button", { name: "/projects" })).toBeInTheDocument();
 	});
 
 	it("submit on coarse pointer blurs the input to dismiss the mobile keyboard", async () => {
@@ -67,7 +68,8 @@ describe("Terminal", () => {
 	it("clicking a help command executes it", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "/help{Enter}");
-		const whoamiBtn = await screen.findByRole("button", { name: "/whoami" });
+		const log = screen.getByRole("log");
+		const whoamiBtn = await within(log).findByRole("button", { name: "/whoami" });
 		await user.click(whoamiBtn);
 		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
 	});
@@ -149,17 +151,6 @@ describe("Terminal", () => {
 		expect(await screen.findByText(/nice try/i)).toBeInTheDocument();
 	});
 
-	it("focusing the input pauses the cycling hint", async () => {
-		const { input } = await renderTerminal();
-		const hint = () => screen.getByText(/^\/[a-z]+$/);
-		const before = hint().textContent;
-		input.focus();
-		await vi.advanceTimersByTimeAsync(2200);
-		expect(hint().textContent).toBe(before);
-		await vi.advanceTimersByTimeAsync(2200);
-		expect(hint().textContent).toBe(before);
-	});
-
 	it("'sudoku' does not trigger sudo egg", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "sudoku{Enter}");
@@ -206,12 +197,14 @@ describe("Terminal", () => {
 			).not.toBeInTheDocument();
 		});
 
-		it("hides chips when input is empty", async () => {
-			const { user, input } = await renderTerminal();
-			await user.type(input, "/p");
-			expect(chipsList()).not.toBeNull();
-			await user.clear(input);
-			expect(chipsList()).toBeNull();
+		it("shows curated chips when input is empty", async () => {
+			const { input } = await renderTerminal();
+			expect(input.value).toBe("");
+			const list = chipsList();
+			expect(list).not.toBeNull();
+			expect(
+				within(list as HTMLElement).getByRole("button", { name: "/help" }),
+			).toBeInTheDocument();
 		});
 
 		it("hides chips when input exactly matches a command (no further completion)", async () => {
@@ -220,21 +213,24 @@ describe("Terminal", () => {
 			expect(chipsList()).toBeNull();
 		});
 
-		it("tapping a chip fills the input and keeps focus on it", async () => {
+		it("tapping a chip auto-submits the command and clears the input without focusing it", async () => {
 			const { user, input } = await renderTerminal();
-			await user.type(input, "/s");
 			const skillsChip = await screen.findByRole("button", { name: "/skills" });
 			await user.click(skillsChip);
-			expect(input.value).toBe("/skills");
-			expect(input).toHaveFocus();
+			await vi.advanceTimersByTimeAsync(150);
+			expect(await screen.findByText(/LLM Agents/i)).toBeInTheDocument();
+			expect(input.value).toBe("");
+			expect(input).not.toHaveFocus();
 		});
 
-		it("after tapping a chip, pressing Enter submits that command", async () => {
-			const { user, input } = await renderTerminal();
-			await user.type(input, "/wh");
-			await user.click(await screen.findByRole("button", { name: "/whoami" }));
-			await user.keyboard("{Enter}");
-			expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+		it("rapid double-tap on a chip only fires one submission", async () => {
+			const { user } = await renderTerminal();
+			const chip = await screen.findByRole("button", { name: "/whoami" });
+			await user.click(chip);
+			await user.click(chip);
+			await vi.advanceTimersByTimeAsync(150);
+			const matches = screen.getAllByText(/WorldFirst/i);
+			expect(matches).toHaveLength(1);
 		});
 
 		it("re-shows chips after typing → clearing → typing again", async () => {
@@ -253,8 +249,11 @@ describe("Terminal", () => {
 		it("history navigation still works after using a chip", async () => {
 			const { user, input } = await renderTerminal();
 			await user.type(input, "/whoami{Enter}");
-			await user.type(input, "/sk");
 			await user.click(await screen.findByRole("button", { name: "/skills" }));
+			await vi.advanceTimersByTimeAsync(150);
+			input.focus();
+			await user.keyboard("{ArrowUp}");
+			expect(input.value).toBe("/skills");
 			await user.keyboard("{ArrowUp}");
 			expect(input.value).toBe("/whoami");
 		});

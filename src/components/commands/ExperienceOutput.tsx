@@ -13,7 +13,7 @@ export function ExperienceOutput() {
 						<div className="absolute left-[-3px] top-[7px] h-[7px] w-[7px] rounded-full bg-coral" />
 						<p className="text-primary">{entry.role}</p>
 						<p className="text-cyan text-sm">{entry.company}</p>
-						<p className="text-muted text-sm">{entry.period}</p>
+						<p className="text-primary text-sm">{entry.period}</p>
 					</div>
 				))}
 			</div>

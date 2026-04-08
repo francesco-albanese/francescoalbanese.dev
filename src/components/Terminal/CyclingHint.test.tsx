@@ -32,12 +32,12 @@ afterEach(() => {
 
 describe("CyclingHint", () => {
 	it("renders the first command initially", () => {
-		render(<CyclingHint paused={false} />);
+		render(<CyclingHint />);
 		expect(screen.getByText(commandList[0] as string)).toBeInTheDocument();
 	});
 
 	it("advances to the next command after the cycle interval", () => {
-		render(<CyclingHint paused={false} />);
+		render(<CyclingHint />);
 		expect(screen.getByText(commandList[0] as string)).toBeInTheDocument();
 		act(() => {
 			vi.advanceTimersByTime(2000);
@@ -46,18 +46,9 @@ describe("CyclingHint", () => {
 		expect(screen.getByText(commandList[1] as string)).toBeInTheDocument();
 	});
 
-	it("does not advance when paused", () => {
-		render(<CyclingHint paused={true} />);
-		expect(screen.getByText(commandList[0] as string)).toBeInTheDocument();
-		act(() => {
-			vi.advanceTimersByTime(5000);
-		});
-		expect(screen.getByText(commandList[0] as string)).toBeInTheDocument();
-	});
-
 	it("does not advance when prefers-reduced-motion is set", () => {
 		mockMatchMedia(true);
-		render(<CyclingHint paused={false} />);
+		render(<CyclingHint />);
 		const initial = screen.getByText(/^\/[a-z]+$/).textContent;
 		act(() => {
 			vi.advanceTimersByTime(5000);
@@ -67,7 +58,7 @@ describe("CyclingHint", () => {
 
 	it("unmounting mid-fade does not throw or warn", () => {
 		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-		const { unmount } = render(<CyclingHint paused={false} />);
+		const { unmount } = render(<CyclingHint />);
 		act(() => {
 			vi.advanceTimersByTime(2000);
 		});

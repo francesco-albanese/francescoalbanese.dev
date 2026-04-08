@@ -51,9 +51,7 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 	const { containerRef, showIndicator, handleScroll, scrollToBottom, forceScrollToBottom } =
 		useAutoScroll([entries.length, welcomeVisible]);
 
-	const [inputFocused, setInputFocused] = useState(false);
 	const draftTrimmed = inputDraft.trim();
-	const isEngaged = draftTrimmed.length > 0 || inputFocused;
 
 	return (
 		<div className="flex flex-col h-[100dvh] bg-base overflow-x-hidden">
@@ -78,8 +76,8 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 								) : (
 									<>
 										This is an interactive portfolio. Type a command, then press Enter ↵ to explore.
-										<span className="block pt-2">
-											<CyclingHint paused={isEngaged} />
+										<span className="hidden sm:block pt-2">
+											<CyclingHint />
 										</span>
 									</>
 								)}
@@ -92,10 +90,11 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 								{entry.prompt && (
 									<div className="text-muted">
 										<span className="text-teal">visitor</span>
-										<span className="text-muted">@francescoalbanese.dev</span>
-										<span className="text-muted">:</span>
+										<span className="text-primary">@</span>
+										<span className="text-cyan">francescoalbanese.dev</span>
+										<span className="text-primary">:</span>
 										<span className="text-blue">~</span>
-										<span className="text-muted">$ </span>
+										<span className="text-primary">$ </span>
 										<span className="text-primary">{entry.prompt}</span>
 									</div>
 								)}
@@ -122,11 +121,12 @@ export function Terminal({ profilePictureSrc }: TerminalProps) {
 					]);
 				}}
 				onValueChange={setInputDraft}
-				onFocusChange={setInputFocused}
 				history={history}
 				disabled={inputDisabled}
 			/>
-			<StatusBar />
+			<div className="hidden sm:block">
+				<StatusBar />
+			</div>
 		</div>
 	);
 }

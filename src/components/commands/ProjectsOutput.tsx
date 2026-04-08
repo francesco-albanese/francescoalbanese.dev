@@ -6,7 +6,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 	return (
 		<div className="border border-faint/20 rounded bg-surface/50 p-3 space-y-1.5">
 			<p className="text-cyan font-semibold">{project.name}</p>
-			<p className="text-muted text-sm">{project.description}</p>
+			<p className="text-primary text-sm">{project.description}</p>
 			<div className="flex flex-wrap gap-1.5">
 				{project.tags.map((tag) => (
 					<span

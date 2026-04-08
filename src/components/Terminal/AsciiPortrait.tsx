@@ -51,7 +51,7 @@ export function AsciiPortrait({ profilePictureSrc }: AsciiPortraitProps) {
 			aria-label="Toggle profile portrait"
 		>
 			<pre
-				className={`font-mono text-[clamp(0.4rem,1.4vw,0.55rem)] leading-[1.1] select-none whitespace-pre transition-opacity duration-300 ${showPhoto ? "opacity-0" : "text-muted opacity-100"}`}
+				className={`font-mono text-[0.5rem] sm:text-[clamp(0.4rem,1.4vw,0.55rem)] leading-[1.1] select-none whitespace-pre transition-opacity duration-300 ${showPhoto ? "opacity-0" : "text-muted opacity-100"}`}
 				aria-hidden="true"
 			>
 				{PORTRAIT}
@@ -59,7 +59,7 @@ export function AsciiPortrait({ profilePictureSrc }: AsciiPortraitProps) {
 			<img
 				src={profilePictureSrc}
 				alt="Francesco Albanese – Lead AI Engineer, profile portrait"
-				loading="lazy"
+				loading="eager"
 				decoding="async"
 				className={`absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300 ${showPhoto ? "opacity-100" : "opacity-0"}`}
 			/>

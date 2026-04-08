@@ -47,7 +47,7 @@ export function dispatch(raw: string, ctx: CommandContext): DispatchResult | nul
 	if (normalized in commands) {
 		return {
 			type: "output",
-			node: <p className="text-muted">{normalized} — coming soon</p>,
+			node: <p className="text-primary">{normalized} — coming soon</p>,
 		};
 	}
 

@@ -11,13 +11,13 @@ export function WhoamiOutput() {
 			<p className="text-coral">Lead AI Engineer</p>
 			<div className="ml-2 space-y-0.5">
 				{visibleLines.map((line) => (
-					<p key={line} className="text-muted">
+					<p key={line} className="text-primary">
 						{line}
 					</p>
 				))}
 				{visibleLines.length === identity.bio.length &&
 					identity.certifications.map((cert) => (
-						<p key={cert.label} className="text-muted">
+						<p key={cert.label} className="text-primary">
 							<a
 								href={cert.url}
 								target="_blank"
