@@ -76,7 +76,12 @@ export function useAutoScroll(deps: unknown[]) {
 		};
 
 		const observer = new ResizeObserver(scrollDown);
+		observer.observe(el);
 		for (const child of el.children) observer.observe(child);
+
+		const vv = typeof window !== "undefined" ? window.visualViewport : null;
+		vv?.addEventListener("resize", scrollDown);
+		vv?.addEventListener("scroll", scrollDown);
 
 		const mutationObserver = new MutationObserver((mutations) => {
 			for (const mutation of mutations) {
@@ -92,6 +97,8 @@ export function useAutoScroll(deps: unknown[]) {
 		return () => {
 			observer.disconnect();
 			mutationObserver.disconnect();
+			vv?.removeEventListener("resize", scrollDown);
+			vv?.removeEventListener("scroll", scrollDown);
 		};
 	}, []);
 
