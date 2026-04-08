@@ -50,6 +50,7 @@ export function TerminalInput({
 	const inputRef = useRef<HTMLInputElement>(null);
 	const didMountRef = useRef(false);
 	const submittingRef = useRef(false);
+	const chipTimerRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		if (!didMountRef.current) {
@@ -58,6 +59,15 @@ export function TerminalInput({
 		}
 		onValueChange?.(value);
 	}, [value, onValueChange]);
+
+	useEffect(() => {
+		return () => {
+			if (chipTimerRef.current !== null) {
+				window.clearTimeout(chipTimerRef.current);
+				chipTimerRef.current = null;
+			}
+		};
+	}, []);
 
 	const matches = getMatches(value);
 
@@ -129,7 +139,8 @@ export function TerminalInput({
 		submittingRef.current = true;
 		setValue(cmd);
 		setHistoryIndex(-1);
-		setTimeout(() => {
+		chipTimerRef.current = window.setTimeout(() => {
+			chipTimerRef.current = null;
 			onSubmit(cmd);
 			setValue("");
 			draftRef.current = "";
