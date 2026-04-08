@@ -10,7 +10,7 @@ export function LsOutput() {
 		return `drwxr-xr-x  ${name}.md`;
 	});
 
-	return <pre className="text-muted text-sm">{entries.join("\n")}</pre>;
+	return <pre className="text-primary text-sm">{entries.join("\n")}</pre>;
 }
 
 const asciiCat = ["  /\\_/\\", " ( o.o )", "  > ^ <", " /|   |\\", "(_|   |_)"].join("\n");

@@ -9,7 +9,7 @@ export function LinksOutput() {
 		<div className="space-y-1.5">
 			{visibleLinks.map((link) => (
 				<div key={link.label} className="flex gap-3">
-					<span className="text-muted min-w-[10ch]">{link.label}</span>
+					<span className="text-primary min-w-[10ch]">{link.label}</span>
 					<a
 						href={link.url}
 						target="_blank"

@@ -5,12 +5,21 @@ type TerminalInputProps = {
 	onSubmit: (value: string) => void;
 	onShowCompletions: (matches: string[]) => void;
 	onValueChange?: (value: string) => void;
-	onFocusChange?: (focused: boolean) => void;
 	history: string[];
 	disabled?: boolean;
 };
 
 const commandNames = Object.keys(commands);
+const CURATED_ORDER = [
+	"/help",
+	"/whoami",
+	"/skills",
+	"/projects",
+	"/experience",
+	"/links",
+	"/clear",
+] as const;
+const CURATED_CHIPS = CURATED_ORDER.filter((cmd) => commandNames.includes(cmd));
 const PLACEHOLDER = "type help or tap a suggestion";
 
 // Chips use substring match (`includes`) for discovery — typing any letter
@@ -19,10 +28,10 @@ const PLACEHOLDER = "type help or tap a suggestion";
 // and substring would be ambiguous.
 function getMatches(value: string): string[] {
 	const trimmed = value.trim().toLowerCase();
-	if (!trimmed) return [];
+	if (!trimmed) return [...CURATED_CHIPS];
 	const needle = trimmed.startsWith("/") ? trimmed.slice(1) : trimmed;
-	if (!needle) return commandNames;
-	return commandNames.filter((cmd) => {
+	if (!needle) return [...CURATED_CHIPS];
+	return CURATED_CHIPS.filter((cmd) => {
 		const bare = cmd.slice(1);
 		return bare.includes(needle) && bare !== needle;
 	});
@@ -32,7 +41,6 @@ export function TerminalInput({
 	onSubmit,
 	onShowCompletions,
 	onValueChange,
-	onFocusChange,
 	history,
 	disabled = false,
 }: TerminalInputProps) {
@@ -41,6 +49,7 @@ export function TerminalInput({
 	const draftRef = useRef("");
 	const inputRef = useRef<HTMLInputElement>(null);
 	const didMountRef = useRef(false);
+	const submittingRef = useRef(false);
 
 	useEffect(() => {
 		if (!didMountRef.current) {
@@ -116,9 +125,16 @@ export function TerminalInput({
 
 	function handleChipTap(cmd: string) {
 		if (disabled) return;
+		if (submittingRef.current) return;
+		submittingRef.current = true;
 		setValue(cmd);
 		setHistoryIndex(-1);
-		inputRef.current?.focus();
+		setTimeout(() => {
+			onSubmit(cmd);
+			setValue("");
+			draftRef.current = "";
+			submittingRef.current = false;
+		}, 100);
 	}
 
 	const showChips = !disabled && matches.length > 0;
@@ -135,7 +151,7 @@ export function TerminalInput({
 			{showChips && (
 				<div
 					data-testid="command-suggestions"
-					className="flex gap-2 overflow-x-auto px-3 pt-2 pb-1 scrollbar-none"
+					className="flex gap-2 overflow-x-auto px-3 pt-1 pb-0.5 sm:pt-2 sm:pb-1 scrollbar-none"
 				>
 					{matches.map((cmd) => (
 						<button
@@ -149,7 +165,7 @@ export function TerminalInput({
 					))}
 				</div>
 			)}
-			<div className="flex items-center gap-2 px-3 py-3">
+			<div className="flex items-center gap-2 px-3 py-2 sm:py-3">
 				<span className="text-coral" aria-hidden="true">
 					❯
 				</span>
@@ -163,8 +179,6 @@ export function TerminalInput({
 							updateValue(e.target.value);
 						}}
 						onKeyDown={disabled ? undefined : handleKeyDown}
-						onFocus={() => onFocusChange?.(true)}
-						onBlur={() => onFocusChange?.(false)}
 						placeholder={disabled ? "" : PLACEHOLDER}
 						aria-label="Terminal input"
 						className="w-full bg-transparent text-transparent caret-transparent outline-none p-0 placeholder:text-transparent text-[16px]"

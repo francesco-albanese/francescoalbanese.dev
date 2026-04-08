@@ -18,9 +18,15 @@ export function HelpOutput({ onExecuteCommand }: HelpOutputProps) {
 						>
 							{name}
 						</button>
-						<span className="text-muted">{def.description}</span>
+						<span className="text-primary">{def.description}</span>
 					</div>
 				))}
+			</div>
+			<div className="hidden sm:block pt-2 text-secondary text-xs">
+				<p>
+					Press <span className="text-coral">Tab</span> to autocomplete ·{" "}
+					<span className="text-coral">↑</span> to recall previous commands
+				</p>
 			</div>
 		</div>
 	);

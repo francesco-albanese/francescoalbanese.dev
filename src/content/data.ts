@@ -53,11 +53,6 @@ export const links = [
 		icon: "li",
 	},
 	{ label: "Email", url: "mailto:hello@francescoalbanese.dev", icon: "mail" },
-	{
-		label: "Website",
-		url: "https://francescoalbanese.dev",
-		icon: "web",
-	},
 ] as const;
 
 export const projects = [
