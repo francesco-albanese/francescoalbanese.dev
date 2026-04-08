@@ -27,8 +27,9 @@ const PLACEHOLDER = "type help or tap a suggestion";
 // match instead, because Tab's contract is "complete the unique candidate"
 // and substring would be ambiguous.
 function getMatches(value: string): string[] {
+	if (value === "") return [...CURATED_CHIPS];
 	const trimmed = value.trim().toLowerCase();
-	if (!trimmed) return [...CURATED_CHIPS];
+	if (!trimmed) return [];
 	const needle = trimmed.startsWith("/") ? trimmed.slice(1) : trimmed;
 	if (!needle) return [...CURATED_CHIPS];
 	return CURATED_CHIPS.filter((cmd) => {
@@ -49,8 +50,7 @@ export function TerminalInput({
 	const draftRef = useRef("");
 	const inputRef = useRef<HTMLInputElement>(null);
 	const didMountRef = useRef(false);
-	const submittingRef = useRef(false);
-	const chipTimerRef = useRef<number | null>(null);
+	const lastChipTapRef = useRef(0);
 
 	useEffect(() => {
 		if (!didMountRef.current) {
@@ -59,15 +59,6 @@ export function TerminalInput({
 		}
 		onValueChange?.(value);
 	}, [value, onValueChange]);
-
-	useEffect(() => {
-		return () => {
-			if (chipTimerRef.current !== null) {
-				window.clearTimeout(chipTimerRef.current);
-				chipTimerRef.current = null;
-			}
-		};
-	}, []);
 
 	const matches = getMatches(value);
 
@@ -93,7 +84,10 @@ export function TerminalInput({
 			const trimmed = value.trim().toLowerCase();
 			if (!trimmed) return;
 			const needle = trimmed.startsWith("/") ? trimmed.slice(1) : trimmed;
-			if (!needle) return;
+			if (!needle) {
+				onShowCompletions([...commandNames]);
+				return;
+			}
 			const tabMatches = commandNames.filter((cmd) => cmd.slice(1).startsWith(needle));
 			if (tabMatches.length === 1 && tabMatches[0]) {
 				setValue(tabMatches[0]);
@@ -135,17 +129,13 @@ export function TerminalInput({
 
 	function handleChipTap(cmd: string) {
 		if (disabled) return;
-		if (submittingRef.current) return;
-		submittingRef.current = true;
-		setValue(cmd);
+		const now = performance.now();
+		if (now - lastChipTapRef.current < 300) return;
+		lastChipTapRef.current = now;
 		setHistoryIndex(-1);
-		chipTimerRef.current = window.setTimeout(() => {
-			chipTimerRef.current = null;
-			onSubmit(cmd);
-			setValue("");
-			draftRef.current = "";
-			submittingRef.current = false;
-		}, 100);
+		onSubmit(cmd);
+		setValue("");
+		draftRef.current = "";
 	}
 
 	const showChips = !disabled && matches.length > 0;

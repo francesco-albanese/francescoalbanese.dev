@@ -37,8 +37,9 @@ describe("Terminal", () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "/help{Enter}");
 		expect(await screen.findByText("Available commands:")).toBeInTheDocument();
-		expect(screen.getByRole("button", { name: "/whoami" })).toBeInTheDocument();
-		expect(screen.getByRole("button", { name: "/projects" })).toBeInTheDocument();
+		const log = screen.getByRole("log");
+		expect(within(log).getByRole("button", { name: "/whoami" })).toBeInTheDocument();
+		expect(within(log).getByRole("button", { name: "/projects" })).toBeInTheDocument();
 	});
 
 	it("submit on coarse pointer blurs the input to dismiss the mobile keyboard", async () => {
@@ -67,7 +68,8 @@ describe("Terminal", () => {
 	it("clicking a help command executes it", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "/help{Enter}");
-		const whoamiBtn = await screen.findByRole("button", { name: "/whoami" });
+		const log = screen.getByRole("log");
+		const whoamiBtn = await within(log).findByRole("button", { name: "/whoami" });
 		await user.click(whoamiBtn);
 		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
 	});
