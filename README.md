@@ -54,7 +54,7 @@ Interactive terminal-based portfolio website. Type commands to explore skills, e
 ### CI/CD Pipeline
 
 - **OIDC federation** for keyless AWS authentication (no long-lived credentials)
-- Infrastructure managed via Terraform in a [separate repository](https://github.com/francescoalbanese/francescoalbanese-dev-infra)
+- Infrastructure managed via Terraform in a [separate repository](https://github.com/francesco-albanese/francescoalbanese-dev-infra)
 
 ## Local Development
 
