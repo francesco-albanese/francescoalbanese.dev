@@ -71,15 +71,17 @@ describe("Terminal", () => {
 		const log = screen.getByRole("log");
 		const whoamiBtn = await within(log).findByRole("button", { name: "/whoami" });
 		await user.click(whoamiBtn);
-		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+		expect(await screen.findByText(/Staff-level engineer/i)).toBeInTheDocument();
 	});
 
 	it("/clear empties the output log", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "/whoami{Enter}");
-		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+		expect(await screen.findByText(/Staff-level engineer/i)).toBeInTheDocument();
 		await user.type(input, "/clear{Enter}");
-		await waitFor(() => expect(screen.queryByText(/WorldFirst/i)).not.toBeInTheDocument());
+		await waitFor(() =>
+			expect(screen.queryByText(/Staff-level engineer/i)).not.toBeInTheDocument(),
+		);
 	});
 
 	it("unknown command shows error", async () => {
@@ -97,7 +99,7 @@ describe("Terminal", () => {
 	it("bare command is case-insensitive", async () => {
 		const { user, input } = await renderTerminal();
 		await user.type(input, "WHOAMI{Enter}");
-		expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+		expect(await screen.findByText(/Staff-level engineer/i)).toBeInTheDocument();
 	});
 
 	it("bare typo still shows error", async () => {
@@ -218,7 +220,7 @@ describe("Terminal", () => {
 			const skillsChip = await screen.findByRole("button", { name: "/skills" });
 			await user.click(skillsChip);
 			await vi.advanceTimersByTimeAsync(150);
-			expect(await screen.findByText(/LLM Agents/i)).toBeInTheDocument();
+			expect(await screen.findByText(/AI Agents/i)).toBeInTheDocument();
 			expect(input.value).toBe("");
 			expect(input).not.toHaveFocus();
 		});
@@ -229,7 +231,7 @@ describe("Terminal", () => {
 			await user.click(chip);
 			await user.click(chip);
 			await vi.advanceTimersByTimeAsync(150);
-			const matches = screen.getAllByText(/WorldFirst/i);
+			const matches = screen.getAllByText(/Staff-level engineer/i);
 			expect(matches).toHaveLength(1);
 		});
 
@@ -321,7 +323,7 @@ describe("Terminal", () => {
 			await user.type(input, "/whoami");
 			const submitBtn = screen.getByRole("button", { name: /run command/i });
 			await user.click(submitBtn);
-			expect(await screen.findByText(/WorldFirst/i)).toBeInTheDocument();
+			expect(await screen.findByText(/Staff-level engineer/i)).toBeInTheDocument();
 			expect(input.value).toBe("");
 		});
 
