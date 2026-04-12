@@ -4,9 +4,9 @@ export const identity = {
 	location: "London, UK",
 	site: "francescoalbanese.dev",
 	bio: [
-		"10+ years building software across fintech, cybersecurity, and travel.",
-		"Clients include WorldFirst (Ant Group), Red Sift, and Pirum Systems.",
-		"Currently focused on LLM agents, RAG pipelines, and AI-driven developer tools.",
+		"10+ years building distributed systems across fintech, cybersecurity, and travel.",
+		"Staff-level engineer — trading platforms, high-throughput architectures, mission-critical systems.",
+		"Currently focused on AI agents, RAG pipelines, and AI-driven developer tools.",
 	],
 	certifications: [
 		{
@@ -26,7 +26,7 @@ export const skills: readonly SkillCategory[] = [
 	{
 		label: "AI",
 		color: "purple",
-		items: ["LLM Agents", "RAG", "Text-to-SQL", "Prompt Engineering", "Fine-tuning"],
+		items: ["AI Agents", "RAG Pipelines", "NLP-to-API", "Eval Driven Development"],
 	},
 	{
 		label: "Backend",
@@ -41,7 +41,7 @@ export const skills: readonly SkillCategory[] = [
 	{
 		label: "Frontend",
 		color: "yellow",
-		items: ["React", "Next.js", "Astro", "Tailwind CSS", "TypeScript"],
+		items: ["React", "Next.js", "Tailwind CSS", "TypeScript"],
 	},
 ] as const;
 
@@ -58,14 +58,14 @@ export const links = [
 export const projects = [
 	{
 		name: "aws-api-gateway-mtls",
-		description: "Asymmetric mTLS authentication for AWS API Gateway",
+		description: "mTLS authentication for AWS API Gateway",
 		tags: ["AWS", "Terraform", "mTLS"],
 		url: "https://github.com/francesco-albanese/aws-api-gateway-mtls",
 	},
 	{
 		name: "python-token-generator",
-		description: "Lightweight cryptographic token generation utility",
-		tags: ["Python", "Crypto"],
+		description: "Lightweight JWT generation utility",
+		tags: ["Python", "JWT"],
 		url: "https://github.com/francesco-albanese/python-token-generator",
 	},
 	{
